@@ -1,12 +1,36 @@
 import React from "react";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-import Authorization from "./Authorization";
-
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import Login from "./pages/Login";
+import Welcome from "./pages/Welcome";
 
 export default function App() {
+  const keyToken = window.localStorage.token;
+
+  const ProtectedRoute = ({ children }) => {
+    if (!keyToken) {
+      return <Navigate to="/" replace />;
+    }
+    return children;
+  };
+
   return (
     <Router>
-      <Authorization />
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route
+          path="/main"
+          element={
+            <ProtectedRoute keyToken={keyToken}>
+              <Welcome />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
     </Router>
   );
 }

@@ -1,31 +1,22 @@
 import { Button, Checkbox, Form, Input } from "antd";
 import React from "react";
-import axios from "axios";
+
+import { getToken } from "../API/token";
 import "antd/dist/antd.css";
-import { BrowserRouter as Router, Link } from "react-router-dom";
 
-const baseURL = "http://192.168.10.104/token";
+import style from "./login.module.css";
+import App from "../App";
 
-const Authorization = () => {
-  const instance = axios.create({
-    baseURL: "http://192.168.10.104/",
-    timeout: 1000,
-  });
-
+const Login = () => {
   const onFinish = (values) => {
     console.log("Success:", values);
-
-    instance.post(`token/`, values).then((response) => {
-      console.log("Response:", response.data);
-      localStorage.setItem("responseSave", JSON.stringify(response));
-    });
+    getToken(values);
   };
 
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
 
-  
   return (
     <Form
       name="basic"
@@ -41,6 +32,7 @@ const Authorization = () => {
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
       autoComplete="off"
+      className={style.FormWrapper}
     >
       <Form.Item
         label="Username"
@@ -74,12 +66,18 @@ const Authorization = () => {
           span: 16,
         }}
       >
-        <Button type="primary" htmlType="submit">
-          Submit
-        </Button>
+        <div className={style.buttonWraper}>
+          <Button type="primary" htmlType="submit" className={style.submit}>
+            Submit
+          </Button>
+
+          <Button type="primary" htmlType="submit" className={style.authorization}>
+            Authorization
+          </Button>
+        </div>
       </Form.Item>
     </Form>
   );
 };
 
-export default Authorization;
+export default Login;

@@ -1,0 +1,24 @@
+.html body {
+  margin: 0;
+}
+
+.FormWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.buttonWraper {
+    display: inline-flex;
+    flex-direction: row;
+}
+
+.submit {
+    margin-right: 10px;
+}
+
+.authorization {
+    margin-right: 100px;
+}
