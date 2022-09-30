@@ -1,16 +1,19 @@
-import { Button, Checkbox, Form, Input } from "antd";
+import { Button, Form, Input } from "antd";
 import React from "react";
 
-import { getToken } from "../API/token";
+import { getToken } from "../../API/token";
 import "antd/dist/antd.css";
 
 import style from "./login.module.css";
-import App from "../App";
+
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
+  const navigate = useNavigate();
+
   const onFinish = (values) => {
-    console.log("Success:", values);
     getToken(values);
+    navigate("/main");
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -32,7 +35,7 @@ const Login = () => {
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
       autoComplete="off"
-      className={style.FormWrapper}
+      className={style.formWrapper}
     >
       <Form.Item
         label="Username"
@@ -71,9 +74,7 @@ const Login = () => {
             Submit
           </Button>
 
-          <Button type="primary" htmlType="submit" className={style.authorization}>
-            Authorization
-          </Button>
+          <Button className={style.register}>Register</Button>
         </div>
       </Form.Item>
     </Form>
