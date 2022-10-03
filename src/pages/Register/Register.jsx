@@ -1,27 +1,22 @@
-import { Button, Form, Input } from "antd";
-import React from "react";
+import { Button, Form, Input, Alert } from "antd";
+import React, { useState } from "react";
 import "antd/dist/antd.css";
 import style from "./register.module.css";
 import { useNavigate } from "react-router-dom";
 
 import { registerUser } from "../../API/register";
 
-import { Alert } from "antd";
-
 const Register = () => {
   const navigate = useNavigate();
 
+  const [registerResponseCode, setRegisterResponseCode] = useState(null); // использую состояния 
+
   const onFinish = (values) => {
-    registerUser(values).then((response) => {
-      if (response.status === 201) {
-        // navigate("/register-Alert");
-        alert("Вы зарегистрированы");
-      } else {
-        return <Alert message="" description="" type="success" showIcon />; // разобраться с алертами (ant design)
-      }
+    registerUser(values).then((status) => { // ему вообще есть дело откуда брать этот статус? Респонс, кэтч? 
+      setRegisterResponseCode(status); 
     });
   };
-
+  
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
@@ -39,14 +34,30 @@ const Register = () => {
       wrapperCol={{
         span: 16,
       }}
-      //   initialValues={{
-      //     remember: true,
-      //   }}
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
       autoComplete="off"
       className={style.formWrapper}
     >
+      
+      {registerResponseCode && registerResponseCode === 201 && (
+        <Alert
+          message="Вы успешно загеристрировались!"
+          type="success"
+          showIcon
+          closable
+        />
+      )}
+      
+      {registerResponseCode && registerResponseCode === 400 && (
+        <Alert
+          message="Такой пользователь уже зарегистрирован!"
+          type="warning"
+          showIcon
+          closable
+        />
+      )}
+
       <Form.Item
         label="Username"
         name="username"
