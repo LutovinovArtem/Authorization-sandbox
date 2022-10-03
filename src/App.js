@@ -9,13 +9,14 @@ import Login from "./pages/Login/Login";
 import Welcome from "./pages/Login/Welcome/Welcome";
 import Register from "./pages/Register/Register";
 import RegisterAlert from "./pages/Register/RegisterAlert/RegisterAlert";
+import AlreadyReg from "./pages/Register/AlreadyRegistered/AlreadyReg";
 
 export default function App() {
-  const keyToken = localStorage.getItem("token"); // change window. to .getItem
+  const keyToken = localStorage.getItem("token");
 
   const ProtectedRoute = ({ children }) => {
     if (!keyToken) {
-      return <Navigate to="/register" replace />; // если авторизация не проходит, то перейти на регистрацию
+      return <Navigate to="/register" replace />; // если токена нет, то перейти на регистрацию
     }
     return children;
   };
@@ -37,7 +38,9 @@ export default function App() {
         {/* РЕГИСТРАЦИЯ */}
         <Route path="/register" element={<Register />} />
         {/* ПОДТВЕРЖДЕНИЕ РЕГИСТРАЦИИ */}
-          <Route path="/RegisterAlert" element={<RegisterAlert />} />
+        <Route path="/RegisterAlert" element={<RegisterAlert />} />
+        {/* ПОЛЬЗОВАТЕЛЬ УЖЕ ЗАРЕГИСТРИРОВАН */}
+        <Route path="/AlreadyReg" element={<AlreadyReg />} />
       </Routes>
     </Router>
   );

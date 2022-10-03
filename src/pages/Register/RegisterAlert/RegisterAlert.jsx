@@ -4,7 +4,7 @@ import style from "./RegisterAlert.module.css";
 const RegisterAlert = () => {
   return (
     <div className={style.RegisterAlert}>
-      Нou are registered
+      You are registered
     </div>
   );
 };

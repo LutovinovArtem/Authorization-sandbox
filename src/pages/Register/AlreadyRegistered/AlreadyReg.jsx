@@ -4,7 +4,7 @@ import style from "./AlreadyReg.module.css";
 const AlreadyReg = () => {
   return (
     <div className={style.AlreadyReg}>
-      Нou are already registered
+      You are already registered
     </div>
   );
 };

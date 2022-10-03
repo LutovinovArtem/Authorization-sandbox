@@ -9,20 +9,16 @@ import { registerUser } from "../../API/register";
 const Register = () => {
   const navigate = useNavigate();
 
-//   const registerStatus = localStorage.getItem("registerStatus");
+  //   const registerStatus = localStorage.getItem("registerStatus");
 
   const onFinish = (values) => {
-    
-    const registerStatus = setTimeout(registerUser(values), 1000)
-
+    const registerStatus = registerUser(values);
+    console.log("registerStatus:", registerStatus);
     if (registerStatus === "201") {
       navigate("/RegisterAlert");
+    } else {
+      navigate("/AlreadyReg");
     }
-    //   localStorage.removeItem("registerStatus");
-     //else if (registerStatus === "A user with that username already exists.") {
-    //   navigate("/оповещение о уже зареганом пользователе");
-    //   console.log("Status:", registerStatus);
-    // 
   };
 
   const onFinishFailed = (errorInfo) => {
