@@ -11,20 +11,23 @@ import { Alert } from "antd";
 const Register = () => {
   const navigate = useNavigate();
 
-
   const onFinish = (values) => {
     registerUser(values).then((response) => {
       if (response.status === 201) {
         // navigate("/register-Alert");
         alert("Вы зарегистрированы");
       } else {
-        return <Alert message="" description="" type="success" showIcon /> // разобраться с алертами (ant design)
+        return <Alert message="" description="" type="success" showIcon />; // разобраться с алертами (ant design)
       }
     });
   };
 
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
+  };
+
+  const linkBack = () => {
+    navigate("/");
   };
 
   return (
@@ -76,9 +79,19 @@ const Register = () => {
           span: 16,
         }}
       >
-        <Button type="primary" htmlType="submit" className={style.register}>
-          Регистрация
-        </Button>
+        <div className={style.buttonWraper}>
+          <Button type="primary" htmlType="submit" className={style.register}>
+            Регистрация
+          </Button>
+          <Button
+            type="primary"
+            htmlType="submit"
+            className={style.register}
+            onClick={linkBack}
+          >
+            Назад
+          </Button>
+        </div>
       </Form.Item>
     </Form>
   );
