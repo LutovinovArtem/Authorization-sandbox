@@ -16,6 +16,9 @@ const Login = () => {
     navigate("/main");
   };
 
+  const linkToRegister = () => navigate("/register");
+  
+
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
@@ -71,10 +74,10 @@ const Login = () => {
       >
         <div className={style.buttonWraper}>
           <Button type="primary" htmlType="submit" className={style.submit}>
-            Submit
+            Авторизация
           </Button>
 
-          <Button className={style.register}>Register</Button>
+          <Button className={style.register} onClick={linkToRegister}>Регистрация</Button>
         </div>
       </Form.Item>
     </Form>

@@ -6,7 +6,7 @@ import {
   Navigate,
 } from "react-router-dom";
 import Login from "./pages/Login/Login";
-import Welcome from "./pages/Login/Welcome/Welcome";
+import Main from "./pages/Welcome/Main";
 import Register from "./pages/Register/Register";
 import RegisterAlert from "./pages/Register/RegisterAlert/RegisterAlert";
 import AlreadyReg from "./pages/Register/AlreadyRegistered/AlreadyReg";
@@ -31,16 +31,16 @@ export default function App() {
           path="/main"
           element={
             <ProtectedRoute keyToken={keyToken}>
-              <Welcome />
+              <Main />
             </ProtectedRoute>
           }
         />
         {/* РЕГИСТРАЦИЯ */}
         <Route path="/register" element={<Register />} />
         {/* ПОДТВЕРЖДЕНИЕ РЕГИСТРАЦИИ */}
-        <Route path="/RegisterAlert" element={<RegisterAlert />} />
+        <Route path="/register-Alert" element={<RegisterAlert />} />
         {/* ПОЛЬЗОВАТЕЛЬ УЖЕ ЗАРЕГИСТРИРОВАН */}
-        <Route path="/AlreadyReg" element={<AlreadyReg />} />
+        <Route path="/already-Reg" element={<AlreadyReg />} />
       </Routes>
     </Router>
   );

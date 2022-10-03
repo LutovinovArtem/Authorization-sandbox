@@ -1,9 +1,9 @@
 import React from "react";
-import style from "./RegisterAlert.module.css";
+import style from "./registerAlert.module.css";
 
 const RegisterAlert = () => {
   return (
-    <div className={style.RegisterAlert}>
+    <div className={style.registerAlert}>
       You are registered
     </div>
   );

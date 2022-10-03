@@ -6,19 +6,21 @@ import { useNavigate } from "react-router-dom";
 
 import { registerUser } from "../../API/register";
 
+import { Alert } from "antd";
+
 const Register = () => {
   const navigate = useNavigate();
 
-  //   const registerStatus = localStorage.getItem("registerStatus");
 
   const onFinish = (values) => {
-    const registerStatus = registerUser(values);
-    console.log("registerStatus:", registerStatus);
-    if (registerStatus === "201") {
-      navigate("/RegisterAlert");
-    } else {
-      navigate("/AlreadyReg");
-    }
+    registerUser(values).then((response) => {
+      if (response.status === 201) {
+        // navigate("/register-Alert");
+        alert("Вы зарегистрированы");
+      } else {
+        return <Alert message="" description="" type="success" showIcon /> // разобраться с алертами (ant design)
+      }
+    });
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -75,7 +77,7 @@ const Register = () => {
         }}
       >
         <Button type="primary" htmlType="submit" className={style.register}>
-          Register
+          Регистрация
         </Button>
       </Form.Item>
     </Form>
