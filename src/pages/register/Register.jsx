@@ -1,22 +1,26 @@
-import { Button, Form, Input, Alert } from "antd";
-import React, { useState } from "react";
+import { Button, Form, Input, message } from "antd";
 import "antd/dist/antd.css";
+import React, { useState } from "react";
 import style from "./register.module.css";
 import { useNavigate } from "react-router-dom";
-
 import { registerUser } from "../../API/register";
+
+
 
 const Register = () => {
   const navigate = useNavigate();
 
-  const [registerResponseCode, setRegisterResponseCode] = useState(null); // использую состояния 
+  // const [registerResponseCode, setRegisterResponseCode] = useState(null);
+  
+  
 
   const onFinish = (values) => {
-    registerUser(values).then((status) => { // ему вообще есть дело откуда брать этот статус? Респонс, кэтч? 
-      setRegisterResponseCode(status); 
+    registerUser(values).then((status) => {
+      // setRegisterResponseCode(status);
     });
+    message.info('fggfgfgfd') }
   };
-  
+
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
@@ -24,6 +28,8 @@ const Register = () => {
   const linkBack = () => {
     navigate("/");
   };
+
+  
 
   return (
     <Form
@@ -39,32 +45,39 @@ const Register = () => {
       autoComplete="off"
       className={style.formWrapper}
     >
-      
-      {registerResponseCode && registerResponseCode === 201 && (
-        <Alert
-          message="Вы успешно загеристрировались!"
-          type="success"
-          showIcon
-          closable
-        />
-      )}
-      
-      {registerResponseCode && registerResponseCode === 400 && (
-        <Alert
-          message="Такой пользователь уже зарегистрирован!"
-          type="warning"
-          showIcon
-          closable
-        />
-      )}
+      {/* <div className={style.alert}>
+        {registerResponseCode === 201 && (
+          <Alert
+            message="Вы успешно зарегистрировались!"
+            type="success"
+            showIcon
+            closable
+          />
+        )}
 
+        {registerResponseCode === 400 && (
+          <Alert
+            message="Такой пользователь уже зарегистрирован!"
+            type="warning"
+            showIcon
+            closable
+          />
+        )}
+      </div> */}
+
+      {/* {registerResponseCode === 201 &&
+        message.success("Вы успешно зарегистрировались!")}
+
+      {registerResponseCode === 400 &&
+        message.warning("Такой пользователь уже зарегистрирован!")} */}
+        
       <Form.Item
-        label="Username"
+        label="Логин"
         name="username"
         rules={[
           {
             required: true,
-            message: "Please input your username!",
+            message: "Введите логин!",
           },
         ]}
       >
@@ -72,12 +85,12 @@ const Register = () => {
       </Form.Item>
 
       <Form.Item
-        label="Password"
+        label="Пароль"
         name="password"
         rules={[
           {
             required: true,
-            message: "Please input your password!",
+            message: "Введите пароль!",
           },
         ]}
       >
@@ -90,12 +103,11 @@ const Register = () => {
           span: 16,
         }}
       >
-        <div className={style.buttonWraper}>
+        <div className={style.buttonWrapper}>
           <Button type="primary" htmlType="submit" className={style.register}>
             Регистрация
           </Button>
           <Button
-            type="primary"
             htmlType="submit"
             className={style.register}
             onClick={linkBack}

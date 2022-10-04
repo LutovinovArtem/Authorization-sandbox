@@ -1,11 +1,8 @@
 import { Button, Form, Input } from "antd";
 import React from "react";
-
 import { getToken } from "../../API/token";
 import "antd/dist/antd.css";
-
 import style from "./login.module.css";
-
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
@@ -16,12 +13,11 @@ const Login = () => {
     navigate("/main");
   };
 
-  const linkToRegister = () => navigate("/register");
-  
-
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
+
+  const linkToRegister = () => navigate("/register");
 
   return (
     <Form
@@ -41,12 +37,12 @@ const Login = () => {
       className={style.formWrapper}
     >
       <Form.Item
-        label="Username"
+        label="Логин"
         name="username"
         rules={[
           {
             required: true,
-            message: "Please input your username!",
+            message: "Введите логин!",
           },
         ]}
       >
@@ -54,12 +50,12 @@ const Login = () => {
       </Form.Item>
 
       <Form.Item
-        label="Password"
+        label="Пароль"
         name="password"
         rules={[
           {
             required: true,
-            message: "Please input your password!",
+            message: "Введите пароль!",
           },
         ]}
       >
@@ -72,12 +68,14 @@ const Login = () => {
           span: 16,
         }}
       >
-        <div className={style.buttonWraper}>
+        <div className={style.buttonWrapper}>
           <Button type="primary" htmlType="submit" className={style.submit}>
             Авторизация
           </Button>
 
-          <Button className={style.register} onClick={linkToRegister}>Регистрация</Button>
+          <Button className={style.register} onClick={linkToRegister}>
+            Регистрация
+          </Button>
         </div>
       </Form.Item>
     </Form>

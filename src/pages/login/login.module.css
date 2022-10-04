@@ -10,16 +10,15 @@
   min-height: 100vh;
 }
 
-.buttonWraper {
-  display: inline-flex;
-  flex-direction: row;
-  padding-right: 100px;
+.buttonWrapper {
+    display: inline-flex;
+    flex-direction: row;
 }
 
 .submit {
-  margin-right: 10px;
+    margin-right: 10px;
 }
 
 .register {
-  margin-right: 5px;
+    margin-right: 100px;
 }

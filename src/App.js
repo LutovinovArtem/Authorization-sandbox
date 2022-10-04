@@ -5,18 +5,18 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import Login from "./pages/Login/Login";
-import Main from "./pages/Welcome/Main";
-import Register from "./pages/Register/Register";
-import RegisterAlert from "./pages/Register/RegisterAlert/RegisterAlert";
-import AlreadyReg from "./pages/Register/AlreadyRegistered/AlreadyReg";
+import Login from "./pages/login/Login";
+import Main from "./pages/main/Main";
+import Register from "./pages/register/Register";
 
 export default function App() {
+  // проверка на наличие jwt токена
   const keyToken = localStorage.getItem("token");
 
   const ProtectedRoute = ({ children }) => {
     if (!keyToken) {
-      return <Navigate to="/register" replace />; // если токена нет, то перейти на регистрацию
+      // если токена нет, то перейти на регистрацию
+      return <Navigate to="/register" replace />; 
     }
     return children;
   };
@@ -37,10 +37,6 @@ export default function App() {
         />
         {/* РЕГИСТРАЦИЯ */}
         <Route path="/register" element={<Register />} />
-        {/* ПОДТВЕРЖДЕНИЕ РЕГИСТРАЦИИ */}
-        <Route path="/register-Alert" element={<RegisterAlert />} />
-        {/* ПОЛЬЗОВАТЕЛЬ УЖЕ ЗАРЕГИСТРИРОВАН */}
-        <Route path="/already-Reg" element={<AlreadyReg />} />
       </Routes>
     </Router>
   );
