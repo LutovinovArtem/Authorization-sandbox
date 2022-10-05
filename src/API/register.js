@@ -4,9 +4,6 @@ import { instance } from "./axios";
 //   instance.post(`register`, values).then((response) => response);
 
 
-
-
-
 export const registerUser = (values) => {
   instance
     .post(`register`, values)
