@@ -1,24 +1,18 @@
 import { Button, Form, Input, message } from "antd";
 import "antd/dist/antd.css";
-import React, { useState } from "react";
+import React from "react";
 import style from "./register.module.css";
 import { useNavigate } from "react-router-dom";
 import { registerUser } from "../../API/register";
-
-
 
 const Register = () => {
   const navigate = useNavigate();
 
   // const [registerResponseCode, setRegisterResponseCode] = useState(null);
-  
-  
 
   const onFinish = (values) => {
-    registerUser(values).then((status) => {
-      // setRegisterResponseCode(status);
-    });
-    message.info('fggfgfgfd') }
+    console.log('Values:', values)
+    registerUser(values);
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -28,8 +22,6 @@ const Register = () => {
   const linkBack = () => {
     navigate("/");
   };
-
-  
 
   return (
     <Form
@@ -70,7 +62,7 @@ const Register = () => {
 
       {registerResponseCode === 400 &&
         message.warning("Такой пользователь уже зарегистрирован!")} */}
-        
+
       <Form.Item
         label="Логин"
         name="username"
