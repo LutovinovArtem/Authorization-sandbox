@@ -1,0 +1,11 @@
+.buttons {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+}
+
+.formItem {
+   display: flex;
+   /* flex-direction: column; */
+   justify-content: space-between;
+}

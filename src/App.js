@@ -6,8 +6,10 @@ import {
   Navigate,
 } from "react-router-dom";
 import Login from "./pages/login/Login";
-import Main from "./pages/main/Main";
+import Main from "./pages/books/Books";
 import Register from "./pages/register/Register";
+import AddBook from "./pages/addBook/AddBook";
+
 
 export default function App() {
   // проверка на наличие jwt токена
@@ -24,19 +26,18 @@ export default function App() {
   return (
     <Router>
       <Routes>
-        {/* АВТОРИЗАЦИЯ */}
-        <Route path="/" element={<Login />} />
-        {/* ПЕРЕХОД В ВЕЛКОМ */}
+        <Route path="/" element={<Login />} /> {/* Авторизация */}
+        {/* Переход на страницу с книгами */}
         <Route
           path="/main"
           element={
-            <ProtectedRoute keyToken={keyToken}>
-              <Main />
+            <ProtectedRoute keyToken={keyToken}> {/* Защищенный переход */}
+              <Books />
             </ProtectedRoute>
           }
         />
-        {/* РЕГИСТРАЦИЯ */}
-        <Route path="/register" element={<Register />} />
+        <Route path="/addBook" element={<AddBook />} /> {/* Переход на страницу с добавлением книги */}
+        <Route path="/register" element={<Register />} /> {/* Регистрация */}
       </Routes>
     </Router>
   );

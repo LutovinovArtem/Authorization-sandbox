@@ -1,17 +1,14 @@
 import React, { useState, useEffect } from "react";
-import style from "./main.module.css";
+import style from "./books.module.css";
 import "antd/dist/antd.css";
 import { Table } from "antd";
-
-// import { getBooks } from "../../API/books";
 import { instance } from "../../API/axios";
+import { AddButton } from "../../components/AddButton";
 
-const Main = () => {
+const Books = () => {
   const [dataSource, setDataSource] = useState(null);
 
   useEffect(() => {
-    // getBooks().then((response) => setDataSource(response))
-    // setDataSource()
     instance
       .get(`books`)
       .then((response) => {
@@ -22,15 +19,19 @@ const Main = () => {
           author: book.author.Name,
           rub_price: book.rub_price,
         }));
-
+        // console.log("Books:", books);
         return setDataSource(books);
       })
       .catch((error) => {
         console.log("Error:", error);
       });
-  }, []); // [] чтобы не спамило запросами
+  }, []); // '[]' чтобы не спамило запросами
 
-  // сами книги
+  // useEffect(() => {
+  //   setDataSource() // передать параметры новой книги
+  // }, []);
+  
+  // сами книги (как пример)
   //  const dataSource = [
   //   {
   //     key: "1",
@@ -38,39 +39,47 @@ const Main = () => {
   //     genres: 'roman',
   //     author: 'Tolstoy',
   //     rub_price: '100',
-  //     currency: 'Rub',
   //   },
   // ];
   // параметры таблицы
   const columns = [
-    // в доке сказано, что key не нужен, если dataIndex уникальный
+    // в документации сказано, что key не нужен, если dataIndex уникальный
     {
       title: "title",
       dataIndex: "title",
-      key: "title",
+      // key: "title",
     },
     {
       title: "genres",
       dataIndex: "genres",
-      key: "genres",
+      // key: "genres",
     },
     {
       title: "author",
       dataIndex: "author",
-      key: "author",
+      // key: "author",
     },
     {
       title: "rub_price",
       dataIndex: "rub_price",
-      key: "price",
+      // key: "price",
     },
+    // {
+    //   title: "currency",
+    //   dataIndex: "currency",
+    //   key: "currency",
+    // },
   ];
 
   return (
     <div className={style.table}>
+      <div className={style.tableHeader}>
+        <h1> Атрибуты </h1>
+        <AddButton />
+      </div>
       <Table dataSource={dataSource} columns={columns} />;
     </div>
   );
 };
 
-export default Main;
+export default Books;
