@@ -6,7 +6,7 @@ import {
   Navigate,
 } from "react-router-dom";
 import Login from "./pages/login/Login";
-import Main from "./pages/books/Books";
+import Books from "./pages/books/Books";
 import Register from "./pages/register/Register";
 import AddBook from "./pages/addBook/AddBook";
 

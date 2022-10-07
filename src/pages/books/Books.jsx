@@ -8,6 +8,12 @@ import { AddButton } from "../../components/AddButton";
 const Books = () => {
   const [dataSource, setDataSource] = useState(null);
 
+  // useEffect(() => {
+  //   instance.get(`currency`).then((response) => {
+  //     console.log(response);
+  //   });
+  // });
+
   useEffect(() => {
     instance
       .get(`books`)
@@ -30,7 +36,7 @@ const Books = () => {
   // useEffect(() => {
   //   setDataSource() // передать параметры новой книги
   // }, []);
-  
+
   // сами книги (как пример)
   //  const dataSource = [
   //   {
@@ -45,29 +51,29 @@ const Books = () => {
   const columns = [
     // в документации сказано, что key не нужен, если dataIndex уникальный
     {
-      title: "title",
+      title: "Название",
       dataIndex: "title",
-      // key: "title",
+      key: "title",
     },
     {
-      title: "genres",
+      title: "Жанр",
       dataIndex: "genres",
-      // key: "genres",
+      key: "genres",
     },
     {
-      title: "author",
+      title: "Автор",
       dataIndex: "author",
-      // key: "author",
+      key: "author",
     },
     {
-      title: "rub_price",
+      title: "Цена в рублях",
       dataIndex: "rub_price",
-      // key: "price",
+      key: "price",
     },
     // {
-    //   title: "currency",
+    //   title: "Валюта",
     //   dataIndex: "currency",
-    //   key: "currency",
+      // key: "currency",
     // },
   ];
 
