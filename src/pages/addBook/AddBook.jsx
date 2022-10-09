@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Form, Input, Button, Cascader, Select } from "antd";
+import { Form, Input, Button, Select } from "antd";
 import "antd/dist/antd.css";
 import { useNavigate } from "react-router-dom";
 import style from "./addBook.module.css";
@@ -7,60 +7,20 @@ import { instance } from "../../API/axios";
 
 const { Option } = Select;
 
-// разобраться как получить значения с каскадного импута
-// преобразовать полученные значения в newBookParam
-// пройтись map по newBookParam и привести всё к виду, который принимает бэк. Затем передать
-
 const AddBook = () => {
   // "Назад"
   const navigate = useNavigate();
   const backToMain = () => navigate("/main");
 
-  // как-то много стейтов, узнать как преобразовать всё в один
-  const [titleInput, setTitleInput] = useState(null);
-  // const [genresInput, setGenresInput] = useState(null);
-  const [authorInput, setAuthorInput] = useState(null);
-  const [rub_priceInput, setRub_priceInput] = useState(null);
-  const [genresInput, setGenresInput] = useState([]);
-  // const [currency, setCurrency] = useState(null);
-
-  // параметры новой книги
-  const newBookParam = { titleInput, genresInput, authorInput, rub_priceInput };
-
-  // const handleChange = (e) => {
-  //   setGenresInput({
-  //     genresInput: [...e.target.selectedOptions].map((o) => o.value),
-  //   });
-  // };
-
-  const addGenresInput = (e) => {
-    console.log(e.target.value);
-    setGenresInput((arr) => [...arr, e.target.value]);
-    console.log(genresInput);
-  };
-
-  // получение жанров
-  const [genresRetrieved, setGenresRetrieved] = useState([]);
-  useEffect(() => {
-    instance
-      .get(`genres`)
-      .then((response) => {
-        const data = response.data;
-        const genres = data.map((step) => step.title);
-        return setGenresRetrieved(genres);
-      })
-      .catch((error) => {
-        console.log("Error:", error);
-      });
-  }, []); // '[]' чтобы не спамило запросами
-
   // запуск
-  const onFinish = (e) => {
-    console.log("genres:", genresRetrieved);
-    console.log("newBookParam:", newBookParam);
-    console.log("genresInput:", genresInput);
+  const [form] = Form.useForm();
+  const onFinish = (values) => {
+    values.author = 1; // захардкодил по просьбе Борба
+    console.log("onFinish:", values);
+
+    // отправка новой книги
     // instance
-    //   .post(`books`, newBookParam)
+    //   .post(`books`, values)
     //   .then((response) => {
     //     console.log("Response:", response);
     //   })
@@ -69,6 +29,36 @@ const AddBook = () => {
     //   });
   };
 
+  // получение жанров
+  const [genresRetrieved, setGenresRetrieved] = useState([]);
+
+  useEffect(() => {
+    instance
+      .get(`genres`)
+      .then((response) => {
+        // const data = response.data;
+        // const genres = data.map((step) => step.title);
+        // return setGenresRetrieved(genres);
+        return setGenresRetrieved(response.data);
+      })
+      .catch((error) => {
+        console.log("Error:", error);
+      });
+      // получение валют - не работает, ошибка на беке
+    instance
+      .get(`currency/`)
+      .then((response) => {
+        console.log("currency:", response);
+        // const data = response.data;
+        // const genres = data.map((step) => step.title);
+        // return setGenresRetrieved(genres);
+        // return setGenresRetrieved(response.data);
+      })
+      .catch((error) => {
+        console.log("Error_currency:", error);
+      });
+  }, []); // '[]' чтобы не спамило запросами
+
   return (
     <div>
       <h1>Добавление книги</h1>
@@ -76,86 +66,42 @@ const AddBook = () => {
         labelCol={{ span: 4 }}
         wrapperCol={{ span: 14 }}
         layout="horizontal"
+        onFinish={onFinish}
+        form={form}
       >
-        <Form.Item label="Название">
-          <Input
-            title="title"
-            value={titleInput}
-            onChange={(e) => setTitleInput(e.target.value)}
-          />
+        <Form.Item label="Название" name="title">
+          <Input title="title" />
         </Form.Item>
 
-        {/* <Form.Item label="Жанр">
-          <Input
-            
-            value={genres}
-            onChange={(e) => setGenres(e.target.value)}
-          />
-        </Form.Item> */}
-
-        {/* <Form.Item label="Жанр">
-          <Cascader
-            genres="genres"
-            isMulti
-            options={[
-              {
-                value: "1",
-                label: `${genresGet[0]}`,
-              },
-              {
-                value: "2",
-                label: `${genresGet[1]}`,
-              },
-              {
-                value: "3",
-                label: `${genresGet[2]}`,
-              },
-            ]}
-          />
-        </Form.Item> */}
-
         <Form.Item
-          genres="genres"
+          name="genres"
           label="Жанр"
           rules={[{ required: true, type: "array" }]}
-          onChange={(e) => addGenresInput(e)}
         >
           <Select mode="multiple">
-            <Option value="genres1"> {genresRetrieved[0]} </Option>
-            <Option value="genres2"> {genresRetrieved[1]} </Option>
-            <Option value="genres3"> {genresRetrieved[2]} </Option>
+            {/* <Option value={genresRetrieved[0]}> {genresRetrieved[0]} </Option> */}
+
+            {genresRetrieved.map((genre) => (
+              <Option value={genre.id}> {genre.title} </Option>
+            ))}
+
           </Select>
         </Form.Item>
 
-         {/* импута не должно быть, захардкодить отправление единицы */}
-        <Form.Item label="Автор">
-          <Input
-            author="author"
-            value={authorInput}
-            onChange={(e) => setAuthorInput(e.target.value)}
-          />
-        </Form.Item> 
-
-        <Form.Item label="Цена">
-          <Input
-            rub_price="rub_price"
-            type="tel"
-            value={rub_priceInput}
-            onChange={(e) => setRub_priceInput(e.target.value)}
-          />
+        {/* импута не должно быть, захардкодить отправление единицы // выполнено */}
+        <Form.Item label="Автор" name="author">
+          <Input author="author" />
         </Form.Item>
 
-        {/* <Form.Item label="Валюта">
-          <Input
-            currency="currency"
-            value={currency}
-            onChange={(e) => setCurrency(e.target.value)}
-          />
-        </Form.Item> */}
+        <Form.Item label="Цена" name="rub_price">
+          <Input rub_price="rub_price" type="tel" />
+        </Form.Item>
+
+          {/* добавить валюты */}
 
         <div className={style.buttons}>
           <Form.Item>
-            <Button onClick={onFinish}>Сохранить</Button>
+            <Button htmlType="submit">Сохранить</Button>
           </Form.Item>
 
           <Form.Item>

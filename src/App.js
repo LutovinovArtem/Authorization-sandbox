@@ -10,6 +10,7 @@ import Books from "./pages/books/Books";
 import Register from "./pages/register/Register";
 import AddBook from "./pages/addBook/AddBook";
 
+// import AddBook2 from "./pages/addBook/AddBook2";
 
 export default function App() {
   // проверка на наличие jwt токена
@@ -18,7 +19,7 @@ export default function App() {
   const ProtectedRoute = ({ children }) => {
     if (!keyToken) {
       // если токена нет, то перейти на регистрацию
-      return <Navigate to="/register" replace />; 
+      return <Navigate to="/register" replace />;
     }
     return children;
   };
@@ -31,12 +32,14 @@ export default function App() {
         <Route
           path="/main"
           element={
-            <ProtectedRoute keyToken={keyToken}> {/* Защищенный переход */}
+            <ProtectedRoute keyToken={keyToken}>
+              {" "}
+              {/* Защищенный переход */}
               <Books />
             </ProtectedRoute>
           }
         />
-        <Route path="/addBook" element={<AddBook />} /> {/* Переход на страницу с добавлением книги */}
+        <Route path="/addBook" element={<AddBook />} />
         <Route path="/register" element={<Register />} /> {/* Регистрация */}
       </Routes>
     </Router>

@@ -70,11 +70,11 @@ const Books = () => {
       dataIndex: "rub_price",
       key: "price",
     },
-    // {
-    //   title: "Валюта",
-    //   dataIndex: "currency",
-      // key: "currency",
-    // },
+    {
+      title: "Валюта",
+      dataIndex: "currency",
+      key: "currency",
+    },
   ];
 
   return (
