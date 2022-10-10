@@ -4,7 +4,7 @@ import "antd/dist/antd.css";
 import { Table } from "antd";
 import { instance } from "../../API/axios";
 import { AddButton } from "../../components/AddButton";
-
+import { DeleteButton } from "../../components/DeleteButton";
 const Books = () => {
   const [dataSource, setDataSource] = useState(null);
 
@@ -12,33 +12,22 @@ const Books = () => {
     instance
       .get(`books`)
       .then((response) => {
-        console.log("responseBooks:", response);
         const data = response.data;
-        const books = data.map((book) => ({
+        const books = data.map((book, index) => ({
           title: book.title,
           genres: book.genres.toString(),
           author: book.author.Name,
           rub_price: book.rub_price,
+          actions: <DeleteButton bookID={index+1} />,
         }));
-        console.log("Books:", books);
+
         return setDataSource(books);
       })
       .catch((error) => {
         console.log("ErrorBooks:", error);
       });
-  }, []); // '[]' чтобы не спамило запросами
+  }, []);
 
-
-  // сами книги (как пример)
-  //  const dataSource = [
-  //   {
-  //     key: "1",
-  //     title: "Война и мир",
-  //     genres: 'roman',
-  //     author: 'Tolstoy',
-  //     rub_price: '100',
-  //   },
-  // ];
 
   // параметры таблицы
 

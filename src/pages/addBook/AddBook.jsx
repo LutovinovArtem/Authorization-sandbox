@@ -10,13 +10,15 @@ const { Option } = Select;
 const AlertItem = (props) => {
   let message = "", type = "";
 
-  if (props.responseAlert === 201) {
+  const responseAlert = props.responseAlert;
+
+  if (responseAlert === 201) {
     message = "Книга успешно добавлена!";
     type = "success";
-  } else if (props.responseAlert === 400) {
+  } else if (responseAlert === 400) {
     message = "Ошибка валидации!";
     type = "warning";
-  } else if (props.responseAlert === 500) {
+  } else if (responseAlert === 500) {
     message = "Ошибка со стороны сервера!";
     type = "error";
   }
@@ -50,7 +52,7 @@ const AddBook = () => {
         setAddBookAlertResponse(response.request.status); // переделать
       })
       .catch((error) => {
-        setAddBookAlertResponse(error.request.status);
+        setAddBookAlertResponse(error.request.status); // переделать 
       });
 
     // очистка форм после отправки
