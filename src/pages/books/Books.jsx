@@ -8,16 +8,11 @@ import { AddButton } from "../../components/AddButton";
 const Books = () => {
   const [dataSource, setDataSource] = useState(null);
 
-  // useEffect(() => {
-  //   instance.get(`currency`).then((response) => {
-  //     console.log(response);
-  //   });
-  // });
-
   useEffect(() => {
     instance
       .get(`books`)
       .then((response) => {
+        console.log("responseBooks:", response);
         const data = response.data;
         const books = data.map((book) => ({
           title: book.title,
@@ -25,17 +20,14 @@ const Books = () => {
           author: book.author.Name,
           rub_price: book.rub_price,
         }));
-        // console.log("Books:", books);
+        console.log("Books:", books);
         return setDataSource(books);
       })
       .catch((error) => {
-        console.log("Error:", error);
+        console.log("ErrorBooks:", error);
       });
   }, []); // '[]' чтобы не спамило запросами
 
-  // useEffect(() => {
-  //   setDataSource() // передать параметры новой книги
-  // }, []);
 
   // сами книги (как пример)
   //  const dataSource = [
@@ -47,7 +39,11 @@ const Books = () => {
   //     rub_price: '100',
   //   },
   // ];
+
   // параметры таблицы
+
+  // валюты нет, т.к. она автоматически конвертируется в рубли на сервере. По крайней мере, так заявлено
+
   const columns = [
     // в документации сказано, что key не нужен, если dataIndex уникальный
     {
@@ -71,9 +67,9 @@ const Books = () => {
       key: "price",
     },
     {
-      title: "Валюта",
-      dataIndex: "currency",
-      key: "currency",
+      title: "Действия",
+      dataIndex: "actions",
+      key: "actions",
     },
   ];
 

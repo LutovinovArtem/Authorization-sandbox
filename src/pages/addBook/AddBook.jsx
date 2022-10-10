@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Form, Input, Button, Select } from "antd";
+import { Form, Input, Button, Select, Alert } from "antd";
 import "antd/dist/antd.css";
 import { useNavigate } from "react-router-dom";
 import style from "./addBook.module.css";
@@ -7,26 +7,54 @@ import { instance } from "../../API/axios";
 
 const { Option } = Select;
 
+const AlertItem = (props) => {
+  let message = "", type = "";
+
+  if (props.responseAlert === 201) {
+    message = "Книга успешно добавлена!";
+    type = "success";
+  } else if (props.responseAlert === 400) {
+    message = "Ошибка валидации!";
+    type = "warning";
+  } else if (props.responseAlert === 500) {
+    message = "Ошибка со стороны сервера!";
+    type = "error";
+  }
+
+  return (
+    <div className={style.alert}>
+      {props.responseAlert && (
+        <Alert message={message} type={type} showIcon closable />
+      )}
+    </div>
+  );
+};
+
 const AddBook = () => {
-  // "Назад"
+  // кнопка "Назад"
   const navigate = useNavigate();
   const backToMain = () => navigate("/main");
 
+  // ответ сервера
+  const [addBookAlertResponse, setAddBookAlertResponse] = useState(null);
+  
   // запуск
   const [form] = Form.useForm();
   const onFinish = (values) => {
     values.author = 1; // захардкодил по просьбе Борба
-    console.log("onFinish:", values);
 
     // отправка новой книги
-    // instance
-    //   .post(`books`, values)
-    //   .then((response) => {
-    //     console.log("Response:", response);
-    //   })
-    //   .catch((error) => {
-    //     console.log("Error:", error);
-    //   });
+    instance
+      .post(`books`, values)
+      .then((response) => {
+        setAddBookAlertResponse(response.request.status); // переделать
+      })
+      .catch((error) => {
+        setAddBookAlertResponse(error.request.status);
+      });
+
+    // очистка форм после отправки
+    form.resetFields();
   };
 
   // получение жанров
@@ -36,28 +64,26 @@ const AddBook = () => {
     instance
       .get(`genres`)
       .then((response) => {
-        // const data = response.data;
-        // const genres = data.map((step) => step.title);
-        // return setGenresRetrieved(genres);
         return setGenresRetrieved(response.data);
       })
       .catch((error) => {
         console.log("Error:", error);
       });
-      // получение валют - не работает, ошибка на беке
+  }, []);
+
+  // получение валют
+  const [currencyRetrieved, setСurrencyRetrieved] = useState([]);
+
+  useEffect(() => {
     instance
       .get(`currency/`)
       .then((response) => {
-        console.log("currency:", response);
-        // const data = response.data;
-        // const genres = data.map((step) => step.title);
-        // return setGenresRetrieved(genres);
-        // return setGenresRetrieved(response.data);
+        return setСurrencyRetrieved(response.data);
       })
       .catch((error) => {
         console.log("Error_currency:", error);
       });
-  }, []); // '[]' чтобы не спамило запросами
+  }, []);
 
   return (
     <div>
@@ -79,12 +105,9 @@ const AddBook = () => {
           rules={[{ required: true, type: "array" }]}
         >
           <Select mode="multiple">
-            {/* <Option value={genresRetrieved[0]}> {genresRetrieved[0]} </Option> */}
-
             {genresRetrieved.map((genre) => (
               <Option value={genre.id}> {genre.title} </Option>
             ))}
-
           </Select>
         </Form.Item>
 
@@ -94,10 +117,16 @@ const AddBook = () => {
         </Form.Item>
 
         <Form.Item label="Цена" name="rub_price">
-          <Input rub_price="rub_price" type="tel" />
+          <Input rub_price="price" type="tel" />
         </Form.Item>
 
-          {/* добавить валюты */}
+        <Form.Item label="Валюта" name="currency">
+          <Select>
+            {currencyRetrieved.map((curr) => (
+              <Select.Option value={curr.id}> {curr.name} </Select.Option>
+            ))}
+          </Select>
+        </Form.Item>
 
         <div className={style.buttons}>
           <Form.Item>
@@ -108,9 +137,12 @@ const AddBook = () => {
             <Button onClick={backToMain}>Назад</Button>
           </Form.Item>
         </div>
+
+        <AlertItem responseAlert={addBookAlertResponse} />
+
       </Form>
     </div>
   );
 };
 
-export default () => <AddBook />;
+export default AddBook;

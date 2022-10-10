@@ -1,4 +1,4 @@
-import { Button, Form, Input, message } from "antd";
+import { Button, Form, Input } from "antd"; //message
 import "antd/dist/antd.css";
 import React from "react";
 import style from "./register.module.css";
