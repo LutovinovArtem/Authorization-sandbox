@@ -8,7 +8,8 @@ import { instance } from "../../API/axios";
 const { Option } = Select;
 
 const AlertItem = (props) => {
-  let message = "", type = "";
+  let message = "";
+  let type = "";
 
   const responseAlert = props.responseAlert;
 
@@ -39,7 +40,7 @@ const AddBook = () => {
 
   // ответ сервера
   const [addBookAlertResponse, setAddBookAlertResponse] = useState(null);
-  
+
   // запуск
   const [form] = Form.useForm();
   const onFinish = (values) => {
@@ -52,7 +53,7 @@ const AddBook = () => {
         setAddBookAlertResponse(response.request.status); // переделать
       })
       .catch((error) => {
-        setAddBookAlertResponse(error.request.status); // переделать 
+        setAddBookAlertResponse(error.request.status); // переделать
       });
 
     // очистка форм после отправки
@@ -141,7 +142,6 @@ const AddBook = () => {
         </div>
 
         <AlertItem responseAlert={addBookAlertResponse} />
-
       </Form>
     </div>
   );

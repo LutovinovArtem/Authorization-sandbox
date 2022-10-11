@@ -11,44 +11,51 @@ const Books = () => {
 
   const [requestData, setRequestData] = useState(new Date());
 
-  // const [booksID, setBooksID] = useState(null);
-  // console.log('booksID:', booksID);
-  // const getBooksID = "";
+  // словарь
+  const [mapGenres, setMapGenres] = useState(null); //
 
-  // useEffect(() => {
-  //   instance
-  //     .get(`books`)
-  //     .then((response) => {
-  //       // console.log('Books:',response.data);
-  //       const data = response.data;
-  //       getBooksID = data.map((BooksID) => ({
-  //         ID: BooksID.id,
-  //       }));
-  //       return setBooksID(getBooksID);
-  //     })
-  //     .catch((error) => {
-  //       console.log("ErrorBooks:", error);
-  //     });
-  // }, [requestData]);
+  // стейт жанров
+  const [genresRetrieved, setGenresRetrieved] = useState([]);
+
+  const genresBooks = new Map(
+    genresRetrieved.map((genresMap) => [genresMap.id, genresMap.title])
+  );
 
   useEffect(() => {
+    // получение жанров
+    instance
+      .get(`genres`)
+      .then((response) => {
+        return setGenresRetrieved(response.data);
+      })
+      .catch((error) => {
+        console.log("ErrorGenres:", error);
+      });
+    // получение книг
     instance
       .get(`books`)
       .then((response) => {
         const data = response.data;
+        console.log("books:", data);
         const books = data.map((book) => ({
           title: book.title,
-          genres: book.genres.toString(),
+          // genres: book.genres.toString(),
+          genres: genresBooks.get(book.genres.toString()), // ?????
           author: book.author.Name,
           rub_price: book.rub_price,
-          actions: <DeleteButton bookID={book.id} setRequestData={setRequestData}/>,
+          actions: (
+            <DeleteButton bookID={book.id} setRequestData={setRequestData} />
+          ),
         }));
+        // console.log("genres:", books);
         return setDataSource(books);
       })
       .catch((error) => {
         console.log("ErrorBooks:", error);
       });
   }, [requestData]);
+
+  // const result = genresRetrieved.filter(id => books.genres)
 
   // валюты нет, т.к. она автоматически конвертируется в рубли на сервере. По крайней мере, так заявлено
   const columns = [
