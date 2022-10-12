@@ -11,7 +11,6 @@ const Register = () => {
   // const [registerResponseCode, setRegisterResponseCode] = useState(null);
 
   const onFinish = (values) => {
-    console.log('Values:', values)
     registerUser(values);
   };
 
@@ -19,7 +18,7 @@ const Register = () => {
     console.log("Failed:", errorInfo);
   };
 
-  const linkBack = () => {
+  const goToBack = () => {
     navigate("/");
   };
 
@@ -100,9 +99,8 @@ const Register = () => {
             Регистрация
           </Button>
           <Button
-            htmlType="submit"
             className={style.register}
-            onClick={linkBack}
+            onClick={goToBack}
           >
             Назад
           </Button>

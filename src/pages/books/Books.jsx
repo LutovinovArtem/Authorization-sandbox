@@ -5,59 +5,37 @@ import { Table } from "antd";
 import { instance } from "../../API/axios";
 import { AddButton } from "../../components/AddButton";
 import { DeleteButton } from "../../components/DeleteButton";
+import { getGenres } from "../../API/getGenres";
+import { getBooks } from "../../API/getBooks";
 
 const Books = () => {
-  const [dataSource, setDataSource] = useState(null);
-
-  const [requestData, setRequestData] = useState(new Date());
-
-  // словарь
-  const [mapGenres, setMapGenres] = useState(null); //
-
-  // стейт жанров
-  const [genresRetrieved, setGenresRetrieved] = useState([]);
-
-  const genresBooks = new Map(
-    genresRetrieved.map((genresMap) => [genresMap.id, genresMap.title])
-  );
+  const [books, setBooks] = useState(null);
+  const [genres, setGenres] = useState();
 
   useEffect(() => {
-    // получение жанров
-    instance
-      .get(`genres`)
-      .then((response) => {
-        return setGenresRetrieved(response.data);
-      })
-      .catch((error) => {
-        console.log("ErrorGenres:", error);
-      });
-    // получение книг
-    instance
-      .get(`books`)
-      .then((response) => {
-        const data = response.data;
-        console.log("books:", data);
-        const books = data.map((book) => ({
-          title: book.title,
-          // genres: book.genres.toString(),
-          genres: genresBooks.get(book.genres.toString()), // ?????
-          author: book.author.Name,
-          rub_price: book.rub_price,
-          actions: (
-            <DeleteButton bookID={book.id} setRequestData={setRequestData} />
-          ),
-        }));
-        // console.log("genres:", books);
-        return setDataSource(books);
-      })
-      .catch((error) => {
-        console.log("ErrorBooks:", error);
-      });
-  }, [requestData]);
+    getGenres().then((res) => setGenres(res));
+   getBooks().then((res) => setBooks(res));
+  }, []);
 
-  // const result = genresRetrieved.filter(id => books.genres)
+  const formatBooks = () => {
+    const books = books.map((book) => ({
+      id: book.id,
+      title: book.title,
+      genres: genresBooks.get(book.genres.toString()), // ?????
+      author: book.author.Name,
+      rub_price: book.rub_price,
+      actions: <DeleteButton bookID={book.id} />,
+    }));
 
-  // валюты нет, т.к. она автоматически конвертируется в рубли на сервере. По крайней мере, так заявлено
+
+    setBooks(books);
+  };
+
+  useEffect(() => {
+      formatBooks();
+  }, [genres]); // ?
+
+
   const columns = [
     {
       title: "Название",
@@ -92,7 +70,7 @@ const Books = () => {
         <h1> Книги </h1>
         <AddButton />
       </div>
-      <Table dataSource={dataSource} columns={columns} />;
+      <Table dataSource={books} columns={columns} />;
     </div>
   );
 };

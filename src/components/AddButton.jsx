@@ -6,12 +6,12 @@ import { useNavigate } from "react-router-dom";
 export const AddButton = () => {
   const navigate = useNavigate();
 
-  const linkAddBook = () => {
+  const goToAddBook = () => {
     navigate("/addBook");
   };
 
   return (
-    <Button type="primary" htmlType="submit" onClick={linkAddBook}>
+    <Button type="primary" onClick={goToAddBook}>
       + Добавить
     </Button>
   );

@@ -5,7 +5,7 @@ import { Button } from "antd";
 export const EditButton = () => {
 
   return (
-    <Button type="primary" htmlType="submit" onClick="">
+    <Button type="primary" onClick="">
       Редактировать
     </Button>
   );

@@ -1,91 +1,61 @@
 import React, { useState, useEffect } from "react";
-import { Form, Input, Button, Select, Alert } from "antd";
+import { Form, Input, Button, Select } from "antd";
 import "antd/dist/antd.css";
 import { useNavigate } from "react-router-dom";
 import style from "./addBook.module.css";
 import { instance } from "../../API/axios";
+import AlertAddBook from "../../components/AlertAddBook";
+import { postBooks } from "../../API/postBooks";
+import { getBooks } from "../../API/getBooks";
+import { getCurrency } from "../../API/getCurrency";
 
 const { Option } = Select;
-
-const AlertItem = (props) => {
-  let message = "";
-  let type = "";
-
-  const responseAlert = props.responseAlert;
-
-  if (responseAlert === 201) {
-    message = "Книга успешно добавлена!";
-    type = "success";
-  } else if (responseAlert === 400) {
-    message = "Ошибка валидации!";
-    type = "warning";
-  } else if (responseAlert === 500) {
-    message = "Ошибка со стороны сервера!";
-    type = "error";
-  }
-
-  return (
-    <div className={style.alert}>
-      {props.responseAlert && (
-        <Alert message={message} type={type} showIcon closable />
-      )}
-    </div>
-  );
-};
 
 const AddBook = () => {
   // кнопка "Назад"
   const navigate = useNavigate();
-  const backToMain = () => navigate("/main");
+  const goToBooks = () => navigate("/books");
 
   // ответ сервера
-  const [addBookAlertResponse, setAddBookAlertResponse] = useState(null);
+  const [addBook, setAddBook] = useState(null);
 
   // запуск
   const [form] = Form.useForm();
   const onFinish = (values) => {
-    values.author = 1; // захардкодил по просьбе Борба
+    // values.author = 1; // захардкодил
 
     // отправка новой книги
-    instance
-      .post(`books`, values)
-      .then((response) => {
-        setAddBookAlertResponse(response.request.status); // переделать
-      })
-      .catch((error) => {
-        setAddBookAlertResponse(error.request.status); // переделать
-      });
+    postBooks();
 
-    // очистка форм после отправки
     form.resetFields();
   };
 
   // получение жанров
-  const [genresRetrieved, setGenresRetrieved] = useState([]);
+  const [genres, setGenres] = useState([]);
 
   useEffect(() => {
-    instance
-      .get(`genres`)
-      .then((response) => {
-        return setGenresRetrieved(response.data);
-      })
-      .catch((error) => {
-        console.log("Error:", error);
-      });
+    //   instance
+    //     .get("genres")
+    //     .then((response) => setGenres(response.data))
+    //     .catch((error) => {
+    //       console.log("Error:", error);
+    //     });
+    getBooks();
   }, []);
 
   // получение валют
-  const [currencyRetrieved, setСurrencyRetrieved] = useState([]);
+  const [currency, setСurrency] = useState([]);
 
   useEffect(() => {
-    instance
-      .get(`currency/`)
-      .then((response) => {
-        return setСurrencyRetrieved(response.data);
-      })
-      .catch((error) => {
-        console.log("Error_currency:", error);
-      });
+    // instance
+    //   .get("currency/")
+    //   .then((response) => {
+    //     return setСurrency(response.data);
+    //   })
+    //   .catch((error) => {
+    //     console.log("Error_currency:", error);
+    //   });
+    getCurrency();
   }, []);
 
   return (
@@ -108,8 +78,11 @@ const AddBook = () => {
           rules={[{ required: true, type: "array" }]}
         >
           <Select mode="multiple">
-            {genresRetrieved.map((genre) => (
-              <Option value={genre.id}> {genre.title} </Option>
+            {genres.map((genre) => (
+              <Option key={genre.id} value={genre.id}>
+                {" "}
+                {genre.title}{" "}
+              </Option>
             ))}
           </Select>
         </Form.Item>
@@ -125,23 +98,26 @@ const AddBook = () => {
 
         <Form.Item label="Валюта" name="currency">
           <Select>
-            {currencyRetrieved.map((curr) => (
-              <Select.Option value={curr.id}> {curr.name} </Select.Option>
+            {currency.map((curr) => (
+              <Select.Option key={curr.id} value={curr.id}>
+                {" "}
+                {curr.name}{" "}
+              </Select.Option>
             ))}
           </Select>
         </Form.Item>
 
         <div className={style.buttons}>
           <Form.Item>
-            <Button htmlType="submit">Сохранить</Button>
+            <Button htmlType="submit"> Сохранить </Button>
           </Form.Item>
 
           <Form.Item>
-            <Button onClick={backToMain}>Назад</Button>
+            <Button onClick={goToBooks}> Назад </Button>
           </Form.Item>
         </div>
 
-        <AlertItem responseAlert={addBookAlertResponse} />
+        <AlertAddBook response={addBook} />
       </Form>
     </div>
   );

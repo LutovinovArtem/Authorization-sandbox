@@ -2,23 +2,23 @@ import { Button, Form, Input } from "antd";
 import React from "react";
 import { getToken } from "../../API/token";
 import "antd/dist/antd.css";
-import style from "./login.module.css";
+import style from "./Authorization.module.css";
 import { useNavigate } from "react-router-dom";
 
-const Login = () => {
+const Authorization = () => {
   const navigate = useNavigate();
 
   const onFinish = (values) => {
     getToken(values);
-    navigate("/main");
+    navigate("/books");
   };
 
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
 
-  const linkToRegister = () => navigate("/register");
-
+  const goToRegister = () => navigate("/register");
+  
   return (
     <Form
       name="basic"
@@ -73,7 +73,7 @@ const Login = () => {
             Авторизация
           </Button>
 
-          <Button className={style.register} onClick={linkToRegister}>
+          <Button className={style.register} onClick={goToRegister}>
             Регистрация
           </Button>
         </div>
@@ -82,4 +82,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Authorization;

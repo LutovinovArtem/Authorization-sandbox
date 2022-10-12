@@ -5,20 +5,16 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import Login from "./pages/login/Login";
+import Authorization from "./pages/login/Authorization";
 import Books from "./pages/books/Books";
 import Register from "./pages/register/Register";
 import AddBook from "./pages/addBook/AddBook";
 
-// import AddBook2 from "./pages/addBook/AddBook2";
-
 export default function App() {
-  // проверка на наличие jwt токена
   const keyToken = localStorage.getItem("token");
 
   const ProtectedRoute = ({ children }) => {
     if (!keyToken) {
-      // если токена нет, то перейти на регистрацию
       return <Navigate to="/register" replace />;
     }
     return children;
@@ -27,20 +23,25 @@ export default function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Login />} /> {/* Авторизация */}
-        {/* Переход на страницу с книгами */}
+        <Route path="/" element={<Authorization />} /> 
         <Route
-          path="/main"
+          path="/books"
           element={
             <ProtectedRoute keyToken={keyToken}>
               {" "}
-              {/* Защищенный переход */}
               <Books />
             </ProtectedRoute>
           }
         />
-        <Route path="/addBook" element={<AddBook />} />
-        <Route path="/register" element={<Register />} /> {/* Регистрация */}
+        <Route
+          path="/addBook"
+          element={
+            <ProtectedRoute keyToken={keyToken}>
+              <AddBook />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="/register" element={<Register />} />
       </Routes>
     </Router>
   );

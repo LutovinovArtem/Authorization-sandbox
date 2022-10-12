@@ -1,26 +1,15 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Button } from "antd";
-import { instance } from "../API/axios";
-
+import { deleteBook } from "../API/deleteBook";
 
 export const DeleteButton = (props) => {
   const bookID = props.bookID;
 
-  const deleteBook = () => {
-    instance
-      .delete(`books/${bookID}`)
-      .then((response) => {
-        if(response.status === 204) {props.setRequestData(new Date());}
-      })
-      .catch((error) => {
-        console.log("ErrorBooks:", error);
-      });
-    };
+  deleteBook();
 
-    return (
-      <Button type="primary" htmlType="submit" onClick={deleteBook}>
-        Удалить
-      </Button>
-    );
-  
+  return (
+    <Button type="primary" onClick={deleteBook}>
+      Удалить
+    </Button>
+  );
 };
