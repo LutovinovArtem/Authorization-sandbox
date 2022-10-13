@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "antd";
-import { deleteBook } from "../API/deleteBook";
+import { deleteBook } from "../API/instanceBook";
 
 export const DeleteButton = (props) => {
   const bookID = props.bookID;
@@ -8,7 +8,7 @@ export const DeleteButton = (props) => {
   deleteBook();
 
   return (
-    <Button type="primary" onClick={deleteBook}>
+    <Button danger type="primary" onClick={deleteBook}>
       Удалить
     </Button>
   );

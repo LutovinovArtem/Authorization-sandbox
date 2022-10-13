@@ -3,7 +3,7 @@ import "antd/dist/antd.css";
 import React from "react";
 import style from "./register.module.css";
 import { useNavigate } from "react-router-dom";
-import { registerUser } from "../../API/register";
+import { registerUser } from "../../API/registerUser";
 
 const Register = () => {
   const navigate = useNavigate();

@@ -3,59 +3,36 @@ import { Form, Input, Button, Select } from "antd";
 import "antd/dist/antd.css";
 import { useNavigate } from "react-router-dom";
 import style from "./addBook.module.css";
-import { instance } from "../../API/axios";
 import AlertAddBook from "../../components/AlertAddBook";
-import { postBooks } from "../../API/postBooks";
-import { getBooks } from "../../API/getBooks";
+import { postBooks } from "../../API/instanceBook";
+import { getGenres } from "../../API/getGenres";
 import { getCurrency } from "../../API/getCurrency";
 
 const { Option } = Select;
 
 const AddBook = () => {
-  // кнопка "Назад"
   const navigate = useNavigate();
   const goToBooks = () => navigate("/books");
 
-  // ответ сервера
-  const [addBook, setAddBook] = useState(null);
+  const [addBook, setAddBook] = useState();
 
-  // запуск
   const [form] = Form.useForm();
   const onFinish = (values) => {
     // values.author = 1; // захардкодил
 
-    // отправка новой книги
-    postBooks();
+    postBooks(values).then((res) => setAddBook(res.request.status)).catch(error => setAddBook(error.request.status));
 
     form.resetFields();
   };
 
-  // получение жанров
   const [genres, setGenres] = useState([]);
-
   useEffect(() => {
-    //   instance
-    //     .get("genres")
-    //     .then((response) => setGenres(response.data))
-    //     .catch((error) => {
-    //       console.log("Error:", error);
-    //     });
-    getBooks();
+    getGenres().then((res) => setGenres(res));
   }, []);
 
-  // получение валют
   const [currency, setСurrency] = useState([]);
-
   useEffect(() => {
-    // instance
-    //   .get("currency/")
-    //   .then((response) => {
-    //     return setСurrency(response.data);
-    //   })
-    //   .catch((error) => {
-    //     console.log("Error_currency:", error);
-    //   });
-    getCurrency();
+    getCurrency().then((res) => setСurrency(res));
   }, []);
 
   return (
