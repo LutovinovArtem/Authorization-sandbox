@@ -4,83 +4,84 @@ import "antd/dist/antd.css";
 import { Table, Space, Button } from "antd";
 import { AddButton } from "../../components/AddButton";
 import { deleteBook } from "../../API/instanceBook";
-import { getGenres } from "../../API/getGenres";
 import { getBooks } from "../../API/instanceBook";
+import { getGenres } from "../../API/getGenres";
 
 const Books = () => {
   const [books, setBooks] = useState([]);
   const [genres, setGenres] = useState([]);
 
+  const formatBooks = (book) => {
+    const newBooks = book.map((book) => ({
+      id: book.id,
+      key: book.id,
+      title: book.title,
+      genres: book.genres.toString(), // ?
+      author: book.author.Name,
+      rub_price: book.rub_price,
+    }));
+    // setBooks(newBooks);
+    return newBooks;
+  };
+
   useEffect(() => {
     getGenres().then((res) => setGenres(res));
-    getBooks().then((res) => setBooks(res));
+    getBooks().then((res) => setBooks(formatBooks(res)));
   }, []);
 
   const handleDeleteClick = (id) => {
     // new Promise(() => deleteBook(id)).then(getBooks());
-    deleteBook(id).then(getBooks())//.then(res => setBooks(res));
-    
+    //.then(res => setBooks(res));
+    deleteBook(id).then(() => getBooks().then((res) => setBooks(formatBooks(res))));
+    // deleteBook(id).then(getBooks().then((res) => setBooks(formatBooks(res))));
     // setBooks(books);
   };
-
-  // const formatBooks = () => {
-  //   console.log('books:', books);
-  //   const newBooks = books.map((book) => ({
-  //     id: book.id,
-  //     title: book.title,
-  //     // genres: genresBooks.get(book.genres.toString()), // ?????
-  //     author: book.author.Name,
-  //     rub_price: book.rub_price,
-  //   }));
-
-  //   setBooks(newBooks);
-  // };
-
-  // useEffect(() => {
-  //   formatBooks();
-  // }, [genres]);
 
   const columns = [
     {
       title: "Название",
       dataIndex: "title",
       key: "title",
-      render: (title) => <a>{title}</a>,
+      // render: (title) => <a>{title}</a>,
     },
     {
       title: "Жанр",
       dataIndex: "genres",
       key: "genres",
+      // render: (genres) => {},
     },
     {
       title: "Автор",
       dataIndex: "author",
       key: "author",
-      render: (author) => author.Name,
+      // render: (author) => author.Name,
     },
     {
       title: "Цена в рублях",
       dataIndex: "rub_price",
       key: "price",
     },
-    // {
-    //   title: "Действия",
-    //   dataIndex: "actions",
-    //   key: "actions",
-    // },
     {
       title: "Action",
       key: "action",
       render: (_, book) => (
         <Space size="middle">
-          <div> Редактировать </div>
+          <div>
+            <Button
+              type="primary"
+              // onClick={}
+            >
+              Редактировать
+            </Button>
+          </div>
+
           <div>
             <Button
               danger
               type="primary"
               onClick={() => handleDeleteClick(book.id)}
             >
-              Удалить
+              Удалить bookID: {book.id}
             </Button>
           </div>
         </Space>

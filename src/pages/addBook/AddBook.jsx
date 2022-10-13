@@ -20,7 +20,9 @@ const AddBook = () => {
   const onFinish = (values) => {
     // values.author = 1; // захардкодил
 
-    postBooks(values).then((res) => setAddBook(res.request.status)).catch(error => setAddBook(error.request.status));
+    postBooks(values)
+      .then((res) => setAddBook(res.request.status))
+      .catch((error) => setAddBook(error.request.status));
 
     form.resetFields();
   };
