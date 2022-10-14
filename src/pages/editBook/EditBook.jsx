@@ -2,28 +2,35 @@ import React, { useState, useEffect } from "react";
 import { Form, Input, Button, Select } from "antd";
 import "antd/dist/antd.css";
 import { useNavigate } from "react-router-dom";
-import style from "./addBook.module.css";
-import AlertAddBook from "../../components/AlertAddBook";
-import { postBooks, getGenres, getCurrency } from "../../API/instanceBook";
+import style from "./editBook.module.css";
+// import AlertAddBook from "../../components/AlertAddBook";
+import { postBooks, getGenres, getCurrency, getBooks } from "../../API/instanceBook";
 
 const { Option } = Select;
 
-const AddBook = () => {
+const EditBook = () => {
   const navigate = useNavigate();
   const goToBooks = () => navigate("/books");
 
-  const [addBook, setAddBook] = useState();
+  const [addEditBook, setAddEditBook] = useState();
 
   const [form] = Form.useForm();
   const onFinish = (values) => {
-    values.author = 1; // захардкодил
+    // values.author = 1; // захардкодил
 
     postBooks(values)
-      .then((res) => setAddBook(res.request.status))
-      .catch((error) => setAddBook(error.request.status));
+      .then((res) => setAddEditBook(res.request.status))
+      .catch((error) => setAddEditBook(error.request.status));
 
-    form.resetFields();
+    // form.resetFields();
   };
+
+  const [selectedBooks, setSelectedBooks] = useState();
+  console.log('selectedBooks', selectedBooks);
+  
+  useEffect(() => {
+    getBooks().then((res) => setSelectedBooks(res))
+  }, []);
 
   const [genres, setGenres] = useState([]);
   useEffect(() => {
@@ -37,7 +44,7 @@ const AddBook = () => {
 
   return (
     <div>
-      <h1>Добавление книги</h1>
+      <h1>Редактирование книги</h1>
       <Form
         labelCol={{ span: 4 }}
         wrapperCol={{ span: 14 }}
@@ -46,7 +53,7 @@ const AddBook = () => {
         form={form}
       >
         <Form.Item label="Название" name="title">
-          <Input title="title" />
+          <Input title="title" defaultValue="1"/>
         </Form.Item>
 
         <Form.Item
@@ -54,7 +61,7 @@ const AddBook = () => {
           label="Жанр"
           rules={[{ required: true, type: "array" }]}
         >
-          <Select mode="multiple">
+          <Select mode="multiple" defaultValue="2">
             {genres.map((genre) => (
               <Option key={genre.id} value={genre.id}>
                 {" "}
@@ -66,15 +73,15 @@ const AddBook = () => {
 
         {/* импута не должно быть, захардкодить отправление единицы // выполнено */}
         <Form.Item label="Автор" name="author">
-          <Input author="author" />
+          <Input author="author" defaultValue="3" />
         </Form.Item>
 
         <Form.Item label="Цена" name="rub_price">
-          <Input rub_price="price" />
+          <Input rub_price="price" defaultValue="4" />
         </Form.Item>
 
         <Form.Item label="Валюта" name="currency">
-          <Select>
+          <Select defaultValue="5">
             {currency.map((curr) => (
               <Select.Option key={curr.id} value={curr.id}>
                 {" "}
@@ -94,10 +101,10 @@ const AddBook = () => {
           </Form.Item>
         </div>
 
-        <AlertAddBook response={addBook} />
+        {/* <AlertAddBook response={addBook} /> */}
       </Form>
     </div>
   );
 };
 
-export default AddBook;
+export default EditBook;

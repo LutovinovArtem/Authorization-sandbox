@@ -9,6 +9,7 @@ import Authorization from "./pages/login/Authorization";
 import Books from "./pages/books/Books";
 import Register from "./pages/register/Register";
 import AddBook from "./pages/addBook/AddBook";
+import EditBook from "./pages/editBook/EditBook";
 
 export default function App() {
   const keyToken = localStorage.getItem("token");
@@ -23,7 +24,7 @@ export default function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Authorization />} /> 
+        <Route path="/" element={<Authorization />} />
         <Route
           path="/books"
           element={
@@ -38,6 +39,14 @@ export default function App() {
           element={
             <ProtectedRoute keyToken={keyToken}>
               <AddBook />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/editBook"
+          element={
+            <ProtectedRoute keyToken={keyToken}>
+              <EditBook />
             </ProtectedRoute>
           }
         />

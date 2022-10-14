@@ -16,3 +16,7 @@ export const postBooks = (values) =>
     .post("books", values)
     .then((response) => response)
     .catch((error) => error);
+
+export const getGenres = () => instance.get(`genres`).then(res => res.data);
+
+export const getCurrency = () => instance.get("currency/").then((response) => response.data);
