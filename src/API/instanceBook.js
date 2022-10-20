@@ -8,8 +8,12 @@ export const deleteBook = (bookID) =>
       console.log("ErrorBooks:", error);
     });
 
+export const getGenres = () => instance.get(`genres`).then((res) => res.data);
+
 export const getBooks = () =>
   instance.get("books").then((response) => response.data);
+
+export const getOneBook = (id) => instance.get(`books/${id}`).then(res => res.data)
 
 export const postBooks = (values) =>
   instance
@@ -17,6 +21,5 @@ export const postBooks = (values) =>
     .then((response) => response)
     .catch((error) => error);
 
-export const getGenres = () => instance.get(`genres`).then(res => res.data);
-
-export const getCurrency = () => instance.get("currency/").then((response) => response.data);
+export const getCurrency = () =>
+  instance.get("currency/").then((response) => response.data);

@@ -14,82 +14,79 @@ const Books = () => {
   };
 
   const [books, setBooks] = useState([]);
-  console.log("books", books);
-  const [genres, setGenres] = useState([]);
-  console.log("genres", genres);
 
-  const genreOnlyTitle = genres.map((genre) => genre.title);
-  // console.log('genreOnlyTitle', genreOnlyTitle[books.genres]);
+  // const formatBooks = (books) => {
+  //   const newBook = books.map((book) => ({
+  //     id: book.id,
+  //     key: book.id,
+  //     title: book.title,
+  //     // genres: book.genres.toString(), // ?
+  //     genres: book.genres,
+  //     // genres: genresDict.get(...book.genres),
+  //     author: book.author.Name,
+  //     rub_price: book.rub_price,
+  //   }));
+  //   return newBook;
+  // };
 
-  const formatBooks = (book) => {
-    const newBooks = book.map((book) => ({
-      id: book.id,
+  // const getBooksRAW = (genres, books) => {
+  //   return books.map((book) => ({
+  //     key: book.id,
+  //     ...book,
+  //     genres: genres.reduce((acc, { id, title }) => {
+  //       if (book.genres.includes(id)) {
+  //         return [...acc, title];
+  //       }
+  //       return acc;
+  //     }, []),
+  //   }));
+  // };
+
+  const getBooksRAW = (genres, books) => {
+    return books.map((book) => ({
       key: book.id,
-      title: book.title,
-      // genres: book.genres.toString(), // ?
-      genres: book.genres,
-      // genres: genreOnlyTitle[1],
-      author: book.author.Name,
-      rub_price: book.rub_price,
+      ...book,
+      genres: genres.reduce((acc, curr) => {
+        if (book.genres.includes(curr.id)) {
+          return [...acc, curr.title];
+        }
+        return acc;
+      }, []),
     }));
-    return newBooks;
   };
 
   useEffect(() => {
-    getGenres().then((res) => setGenres(res));
-    getBooks().then((res) => setBooks(formatBooks(res)));
+    (async () => {
+      const genres = await getGenres();
+      const books = await getBooks();
+      setBooks(getBooksRAW(genres, books));
+    })();
   }, []);
 
-  const handleDeleteClick = (id) => {
-    deleteBook(id).then(() =>
-      getBooks().then((res) => setBooks(formatBooks(res)))
-    );
-  };
+  // const handleDeleteClick = (id) => {
+  //   deleteBook(id).then(() =>
+  //     getBooks().then((res) => setBooks(formatBooks(res))) // Заменить 
+  //   );
 
-  // че бля?
-  // Array.prototype.multiget = function() {
-  //   const args = Array.apply(null, arguments);
-  //   let result = [];
-  //   for (let i = 0; i < args.length; i++) {
-  //     result.push(this[args[i]]);
-  //   }
-  //   return result;
-  // };
+  const handleDeleteClick = (id) => {
+      deleteBook(id).then(() => {
+        const books = getBooks();
+        setBooks(books);
+      }
+      );
+  };
 
   const columns = [
     {
       title: "Название",
       dataIndex: "title",
       key: "title",
-      // render: (title) => <a>{title}</a>,
     },
     {
       title: "Жанр",
       dataIndex: "genres",
       key: "genres",
-      // render: (genres) => genreOnlyTitle[genres] // работает, если приходит 1 жанр
-
-      // render: (genres) => {
-      //   let result = [];
-      //   for (let i = 0; i < genres.length; i++) {
-      //     result.push(genreOnlyTitle[i]);
-      //   }
-      //   return result;
-      // },
-
-      render: (genres) => {
-        // всё, тут шиза пошла
-
-        // let genresLength = "";
-        // for (let i = 0; i < genres.length; i++) {
-        //   genresLength += `${i},`;
-        // }
-        // genresLength = genresLength.slice(0, genresLength.length - 1);
-
-        // // const result = genres.multiget().join(","); // должен принимать 1,2,3 в зависимости от количества элементов массива
-        // // console.log('genres1', result);
-        // return genreOnlyTitle.multiget(genresLength).join(",");
-      },
+      // render: (genres) => {},
     },
     {
       title: "Автор",

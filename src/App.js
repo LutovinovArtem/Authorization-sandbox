@@ -28,7 +28,7 @@ export default function App() {
         <Route
           path="/books"
           element={
-            <ProtectedRoute keyToken={keyToken}>
+            <ProtectedRoute>
               {" "}
               <Books />
             </ProtectedRoute>
@@ -37,13 +37,13 @@ export default function App() {
         <Route
           path="/addBook"
           element={
-            <ProtectedRoute keyToken={keyToken}>
+            <ProtectedRoute>
               <AddBook />
             </ProtectedRoute>
           }
         />
         <Route
-          path="/editBook"
+          path="/editBook/:id"
           element={
             <ProtectedRoute keyToken={keyToken}>
               <EditBook />

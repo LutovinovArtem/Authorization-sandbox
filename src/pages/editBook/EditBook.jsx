@@ -4,7 +4,13 @@ import "antd/dist/antd.css";
 import { useNavigate } from "react-router-dom";
 import style from "./editBook.module.css";
 // import AlertAddBook from "../../components/AlertAddBook";
-import { postBooks, getGenres, getCurrency, getBooks } from "../../API/instanceBook";
+import {
+  postBooks,
+  getGenres,
+  getCurrency,
+  getOneBook,
+} from "../../API/instanceBook";
+import { useParams } from "react-router-dom";
 
 const { Option } = Select;
 
@@ -12,8 +18,10 @@ const EditBook = () => {
   const navigate = useNavigate();
   const goToBooks = () => navigate("/books");
 
-  const [addEditBook, setAddEditBook] = useState();
+  const { id } = useParams;
 
+  const [addEditBook, setAddEditBook] = useState();
+  console.log("res:", addEditBook);
   const [form] = Form.useForm();
   const onFinish = (values) => {
     // values.author = 1; // захардкодил
@@ -25,12 +33,12 @@ const EditBook = () => {
     // form.resetFields();
   };
 
-  const [selectedBooks, setSelectedBooks] = useState();
-  console.log('selectedBooks', selectedBooks);
-  
+  const [book, setBook] = useState();
+  console.log("Book", book);
+
   useEffect(() => {
-    getBooks().then((res) => setSelectedBooks(res))
-  }, []);
+    getOneBook(id).then((res) => setBook(res));
+  }, [id]);
 
   const [genres, setGenres] = useState([]);
   useEffect(() => {
@@ -53,7 +61,7 @@ const EditBook = () => {
         form={form}
       >
         <Form.Item label="Название" name="title">
-          <Input title="title" defaultValue="1"/>
+          <Input title="title" defaultValue={`${book.title}`} />
         </Form.Item>
 
         <Form.Item
@@ -61,7 +69,8 @@ const EditBook = () => {
           label="Жанр"
           rules={[{ required: true, type: "array" }]}
         >
-          <Select mode="multiple" defaultValue="2">
+        {/* пока не понял как с вложенными сделать. Сервер не работает, нужно посмотреть, что возвращает в книгах */}
+          <Select mode="multiple" defaultValue="2"> 
             {genres.map((genre) => (
               <Option key={genre.id} value={genre.id}>
                 {" "}
@@ -73,11 +82,11 @@ const EditBook = () => {
 
         {/* импута не должно быть, захардкодить отправление единицы // выполнено */}
         <Form.Item label="Автор" name="author">
-          <Input author="author" defaultValue="3" />
+          <Input author="author" defaultValue={`${book.author}`} />
         </Form.Item>
 
         <Form.Item label="Цена" name="rub_price">
-          <Input rub_price="price" defaultValue="4" />
+          <Input rub_price="price" defaultValue={`${book.rub_price}`} />
         </Form.Item>
 
         <Form.Item label="Валюта" name="currency">
