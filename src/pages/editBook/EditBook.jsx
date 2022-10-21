@@ -1,44 +1,43 @@
 import React, { useState, useEffect } from "react";
 import { Form, Input, Button, Select } from "antd";
 import "antd/dist/antd.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import style from "./editBook.module.css";
 // import AlertAddBook from "../../components/AlertAddBook";
 import {
-  postBooks,
   getGenres,
   getCurrency,
   getOneBook,
+  putBook,
 } from "../../API/instanceBook";
-import { useParams } from "react-router-dom";
 
 const { Option } = Select;
 
 const EditBook = () => {
+  const { id } = useParams();
+
   const navigate = useNavigate();
   const goToBooks = () => navigate("/books");
 
-  const { id } = useParams;
+  // const [addEditBook, setAddEditBook] = useState();
 
-  const [addEditBook, setAddEditBook] = useState();
-  console.log("res:", addEditBook);
   const [form] = Form.useForm();
-  const onFinish = (values) => {
-    // values.author = 1; // захардкодил
 
-    postBooks(values)
-      .then((res) => setAddEditBook(res.request.status))
-      .catch((error) => setAddEditBook(error.request.status));
+  const onFinish = (values) => {
+    values.author = 1; // захардкодил
+
+    putBook(id, values).then((res) => console.log("res:", res));
 
     // form.resetFields();
   };
 
-  const [book, setBook] = useState();
-  console.log("Book", book);
-
+  const [book, setBook] = useState(null);
   useEffect(() => {
-    getOneBook(id).then((res) => setBook(res));
-  }, [id]);
+    (async () => {
+      const book = await getOneBook(id);
+      setBook(book);
+    })();
+  }, []);
 
   const [genres, setGenres] = useState([]);
   useEffect(() => {
@@ -50,6 +49,10 @@ const EditBook = () => {
     getCurrency().then((res) => setСurrency(res));
   }, []);
 
+  const [value, setValue] = useState()
+  console.log('value: ', value);
+  
+
   return (
     <div>
       <h1>Редактирование книги</h1>
@@ -59,9 +62,11 @@ const EditBook = () => {
         layout="horizontal"
         onFinish={onFinish}
         form={form}
+        initialValues={{ title: `${book.title}`, genres: `${book.genres}`,  author: `${book.author}`, rub_price: `${book.rub_price}`, currency: `${book.currency}`}}
+
       >
         <Form.Item label="Название" name="title">
-          <Input title="title" defaultValue={`${book.title}`} />
+          <Input title="title" />
         </Form.Item>
 
         <Form.Item
@@ -69,8 +74,7 @@ const EditBook = () => {
           label="Жанр"
           rules={[{ required: true, type: "array" }]}
         >
-        {/* пока не понял как с вложенными сделать. Сервер не работает, нужно посмотреть, что возвращает в книгах */}
-          <Select mode="multiple" defaultValue="2"> 
+          <Select mode="multiple">
             {genres.map((genre) => (
               <Option key={genre.id} value={genre.id}>
                 {" "}
@@ -82,15 +86,15 @@ const EditBook = () => {
 
         {/* импута не должно быть, захардкодить отправление единицы // выполнено */}
         <Form.Item label="Автор" name="author">
-          <Input author="author" defaultValue={`${book.author}`} />
+          <Input author="author" />
         </Form.Item>
 
         <Form.Item label="Цена" name="rub_price">
-          <Input rub_price="price" defaultValue={`${book.rub_price}`} />
+          <Input rub_price="price" />
         </Form.Item>
 
         <Form.Item label="Валюта" name="currency">
-          <Select defaultValue="5">
+          <Select>
             {currency.map((curr) => (
               <Select.Option key={curr.id} value={curr.id}>
                 {" "}

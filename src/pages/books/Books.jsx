@@ -3,44 +3,24 @@ import style from "./books.module.css";
 import "antd/dist/antd.css";
 import { Table, Space, Button } from "antd";
 import { AddButton } from "../../components/AddButton";
-import { deleteBook, getBooks, getGenres } from "../../API/instanceBook";
+import {
+  deleteBook,
+  getBooks,
+  getGenres,
+  getOneBook,
+} from "../../API/instanceBook";
 import { useNavigate } from "react-router-dom";
 
 const Books = () => {
-  const navigate = useNavigate();
-
-  const goToEditBook = () => {
-    navigate("/EditBook");
-  };
-
   const [books, setBooks] = useState([]);
 
-  // const formatBooks = (books) => {
-  //   const newBook = books.map((book) => ({
-  //     id: book.id,
-  //     key: book.id,
-  //     title: book.title,
-  //     // genres: book.genres.toString(), // ?
-  //     genres: book.genres,
-  //     // genres: genresDict.get(...book.genres),
-  //     author: book.author.Name,
-  //     rub_price: book.rub_price,
-  //   }));
-  //   return newBook;
-  // };
-
-  // const getBooksRAW = (genres, books) => {
-  //   return books.map((book) => ({
-  //     key: book.id,
-  //     ...book,
-  //     genres: genres.reduce((acc, { id, title }) => {
-  //       if (book.genres.includes(id)) {
-  //         return [...acc, title];
-  //       }
-  //       return acc;
-  //     }, []),
-  //   }));
-  // };
+  const asyncGetAndSetBooks = () => {
+    (async () => {
+      const genres = await getGenres();
+      const books = await getBooks();
+      setBooks(getBooksRAW(genres, books));
+    })();
+  };
 
   const getBooksRAW = (genres, books) => {
     return books.map((book) => ({
@@ -56,24 +36,19 @@ const Books = () => {
   };
 
   useEffect(() => {
-    (async () => {
-      const genres = await getGenres();
-      const books = await getBooks();
-      setBooks(getBooksRAW(genres, books));
-    })();
+    asyncGetAndSetBooks();
   }, []);
 
-  // const handleDeleteClick = (id) => {
-  //   deleteBook(id).then(() =>
-  //     getBooks().then((res) => setBooks(formatBooks(res))) // Заменить 
-  //   );
-
   const handleDeleteClick = (id) => {
-      deleteBook(id).then(() => {
-        const books = getBooks();
-        setBooks(books);
-      }
-      );
+    deleteBook(id).then(() => {
+      asyncGetAndSetBooks();
+    });
+  };
+
+  const navigate = useNavigate();
+
+  const goToEditBook = (id) => {
+    navigate(`/editBook/${id}`);
   };
 
   const columns = [
@@ -86,7 +61,7 @@ const Books = () => {
       title: "Жанр",
       dataIndex: "genres",
       key: "genres",
-      // render: (genres) => {},
+      // render: (genres) => {String(genres)},
     },
     {
       title: "Автор",
@@ -104,7 +79,10 @@ const Books = () => {
       render: (_, book) => (
         <Space size="middle">
           <div>
-            <Button type="primary" onClick={goToEditBook}>
+            <Button
+              type="primary"
+              onClick={() => goToEditBook(book.id)}
+            >
               Редактировать {book.id}
             </Button>
           </div>
