@@ -22,7 +22,8 @@ export const postBooks = (values) =>
     .then((response) => response)
     .catch((error) => error);
 
-export const putBook = (id, values) => instance.put(`books/${id}`, values); //////////////
+export const putBook = (id, values) => instance.put(`books/${id}/`, values); 
+
 
 export const getCurrency = () =>
   instance.get("currency/").then((response) => response.data);

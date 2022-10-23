@@ -1,7 +1,42 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Form, Input, Button, Select } from "antd";
+import { useNavigate } from "react-router-dom";
+import {
+  getGenres,
+  getCurrency,
+  putBook,
+} from "../../API/instanceBook";
+import "antd/dist/antd.css";
+import style from "./editBook.module.css";
 
-const EditBookForm = () => {
+const { Option } = Select;
+
+const EditBookForm = ({ book, id , books}) => {
+
+  const navigate = useNavigate();
+  const goToBooks = () => navigate("/books");
+
+  const onFinish = (values) => {
+    values.author = 1; // захардкодил
+
+    putBook(id, values).then((res) => console.log("res:", res));
+
+    // form.resetFields();
+  };
+
+  const [genres, setGenres] = useState([]);
+  useEffect(() => {
+    getGenres().then((res) => setGenres(res));
+  }, []);
+
+  const [currency, setСurrency] = useState([]);
+  useEffect(() => {
+    getCurrency().then((res) => setСurrency(res));
+  }, []);
+
+  const [form] = Form.useForm();
+
+
   return (
     <Form
       labelCol={{ span: 4 }}
@@ -10,11 +45,10 @@ const EditBookForm = () => {
       onFinish={onFinish}
       form={form}
       initialValues={{
-        title: `${book.title}`,
-        genres: `${book.genres}`,
-        author: `${book.author}`,
-        rub_price: `${book.rub_price}`,
-        currency: `${book.currency}`,
+        title: book.title,
+        genres: book.genres,
+        author: book.author.Name,
+        rub_price: book.rub_price,
       }}
     >
       <Form.Item label="Название" name="title">

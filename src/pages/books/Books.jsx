@@ -7,12 +7,12 @@ import {
   deleteBook,
   getBooks,
   getGenres,
-  getOneBook,
 } from "../../API/instanceBook";
 import { useNavigate } from "react-router-dom";
 
 const Books = () => {
   const [books, setBooks] = useState([]);
+  console.log('books: ', books);
 
   const asyncGetAndSetBooks = () => {
     (async () => {
@@ -34,6 +34,7 @@ const Books = () => {
       }, []),
     }));
   };
+
 
   useEffect(() => {
     asyncGetAndSetBooks();
