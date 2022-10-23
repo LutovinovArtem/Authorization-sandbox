@@ -1,26 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { Form, Input, Button, Select } from "antd";
 import { useNavigate } from "react-router-dom";
-import {
-  getGenres,
-  getCurrency,
-  putBook,
-} from "../../API/instanceBook";
+import { getGenres, getCurrency, putBook } from "../../API/instanceBook";
 import "antd/dist/antd.css";
 import style from "./editBook.module.css";
 
 const { Option } = Select;
 
-const EditBookForm = ({ book, id , books}) => {
-
+const EditBookForm = ({ book, id }) => {
   const navigate = useNavigate();
   const goToBooks = () => navigate("/books");
 
+  const [form] = Form.useForm();
+
   const onFinish = (values) => {
     values.author = 1; // захардкодил
-
     putBook(id, values).then((res) => console.log("res:", res));
-
     // form.resetFields();
   };
 
@@ -33,9 +28,6 @@ const EditBookForm = ({ book, id , books}) => {
   useEffect(() => {
     getCurrency().then((res) => setСurrency(res));
   }, []);
-
-  const [form] = Form.useForm();
-
 
   return (
     <Form
