@@ -1,84 +1,95 @@
-import { Button, Form, Input } from "antd";
+import { Button, message } from "antd";
 import React from "react";
-import { getToken } from "../../API/token";
 import "antd/dist/antd.css";
 import style from "./Authorization.module.css";
 import { useNavigate } from "react-router-dom";
+import { getToken } from "../../API/getToken";
+import { instanceSetHeader } from "../../API/axios";
+
+import { useForm } from "react-hook-form";
 
 const Authorization = () => {
   const navigate = useNavigate();
 
-  const onFinish = (values) => {
-    getToken(values);
-    navigate("/books");
-  };
-
-  const onFinishFailed = (errorInfo) => {
-    console.log("Failed:", errorInfo);
+  const onSubmit = (values) => {
+    getToken(values).then(({ data: { access } }) => {
+      localStorage.setItem("token", access);
+      instanceSetHeader("Authorization", `Bearer ${access}`);
+      navigate("/books");
+      reset();
+    });
   };
 
   const goToRegister = () => navigate("/register");
-  
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isValid },
+  } = useForm({
+    mode: "onBlur",
+  });
+
   return (
-    <Form
-      name="basic"
-      labelCol={{
-        span: 8,
-      }}
-      wrapperCol={{
-        span: 16,
-      }}
-      initialValues={{
-        remember: true,
-      }}
-      onFinish={onFinish}
-      onFinishFailed={onFinishFailed}
-      autoComplete="off"
-      className={style.formWrapper}
-    >
-      <Form.Item
-        label="Логин"
-        name="username"
-        rules={[
-          {
-            required: true,
-            message: "Введите логин!",
-          },
-        ]}
-      >
-        <Input />
-      </Form.Item>
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <h1>Авторизация</h1>
 
-      <Form.Item
-        label="Пароль"
-        name="password"
-        rules={[
-          {
-            required: true,
-            message: "Введите пароль!",
-          },
-        ]}
-      >
-        <Input.Password />
-      </Form.Item>
+      <label>
+        Логин:
+        <br />
+        <input
+          {...register("username", {
+            required: "Введите логин!",
+            minLength: 1,
+            maxLength: {
+              value: 150,
+              message: "Максимальное число символов 150.",
+            },
+            pattern: {
+              value: /^[\w.@+-]+$/,
+              message: "Обнаружен недопустимый символ!",
+            },
+          })}
+        />
+        <br />
+      </label>
+      <div style={{ height: 20 }}>
+        {" "}
+        {errors.username && <p> {errors.username.message || "Error!"} </p>}{" "}
+      </div>
 
-      <Form.Item
-        wrapperCol={{
-          offset: 8,
-          span: 16,
-        }}
-      >
-        <div className={style.buttonWrapper}>
-          <Button type="primary" htmlType="submit" className={style.submit}>
-            Авторизация
-          </Button>
+      <label>
+        Пароль:
+        <br />
+        <input
+          {...register("password", {
+            required: "Введите пароль!",
+            minLength: 1,
+            maxLength: {
+              value: 128,
+              message: "Максимальное число символов 128.",
+            },
+          })}
+        />
+        <br />
+      </label>
+      <div style={{ height: 20 }}>
+        {" "}
+        {errors.password && <p> {errors.password.message || "Error!"} </p>}{" "}
+      </div>
 
-          <Button className={style.register} onClick={goToRegister}>
-            Регистрация
-          </Button>
-        </div>
-      </Form.Item>
-    </Form>
+      <br />
+      <div className={style.buttonWrapper}>
+        <Button type="primary" htmlType="submit" disabled={!isValid} className={style.submit}>
+          Авторизация
+        </Button>
+
+        <Button className={style.register} onClick={goToRegister}>
+          Регистрация
+        </Button>
+      </div>
+    </form>
   );
 };
 

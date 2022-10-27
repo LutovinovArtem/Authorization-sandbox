@@ -16,7 +16,7 @@ const EditBookForm = ({ book, id }) => {
   const onFinish = (values) => {
     values.author = 1; // захардкодил
     putBook(id, values).then((res) => console.log("res:", res));
-    // form.resetFields();
+    form.resetFields();
   };
 
   const [genres, setGenres] = useState([]);
@@ -62,7 +62,7 @@ const EditBookForm = ({ book, id }) => {
         </Select>
       </Form.Item>
 
-      {/* импута не должно быть, захардкодить отправление единицы // выполнено */}
+      {/* импута не должно быть, захардкодить отправление единицы */}
       <Form.Item label="Автор" name="author">
         <Input author="author" />
       </Form.Item>

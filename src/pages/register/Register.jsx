@@ -5,108 +5,92 @@ import style from "./register.module.css";
 import { useNavigate } from "react-router-dom";
 import { registerUser } from "../../API/registerUser";
 
+import { useForm } from "react-hook-form";
+
 const Register = () => {
   const navigate = useNavigate();
 
-  // const [registerResponseCode, setRegisterResponseCode] = useState(null);
-
-  const onFinish = (values) => {
+  const onSubmit = (values) => {
     registerUser(values);
-  };
-
-  const onFinishFailed = (errorInfo) => {
-    console.log("Failed:", errorInfo);
+    reset();
   };
 
   const goToBack = () => {
     navigate("/");
   };
 
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isValid },
+  } = useForm({
+    mode: "onBlur",
+  });
+
   return (
-    <Form
-      name="basic"
-      labelCol={{
-        span: 8,
-      }}
-      wrapperCol={{
-        span: 16,
-      }}
-      onFinish={onFinish}
-      onFinishFailed={onFinishFailed}
-      autoComplete="off"
-      className={style.formWrapper}
-    >
-      {/* <div className={style.alert}>
-        {registerResponseCode === 201 && (
-          <Alert
-            message="Вы успешно зарегистрировались!"
-            type="success"
-            showIcon
-            closable
-          />
-        )}
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <h1>Регистрация</h1>
 
-        {registerResponseCode === 400 && (
-          <Alert
-            message="Такой пользователь уже зарегистрирован!"
-            type="warning"
-            showIcon
-            closable
-          />
-        )}
-      </div> */}
+      <label>
+        Логин:
+        <br />
+        <input
+          {...register("username", {
+            required: "Введите логин!",
+            minLength: 1,
+            maxLength: {
+              value: 150,
+              message: "Максимальное число символов 150.",
+            },
+            pattern: {
+              value: /^[\w.@+-]+$/,
+              message: "Обнаружен недопустимый символ!",
+            },
+          })}
+        />
+        <br />
+      </label>
+      <div style={{ height: 20 }}>
+        {" "}
+        {errors.username && <p> {errors.username.message || "Error!"} </p>}{" "}
+      </div>
 
-      {/* {registerResponseCode === 201 &&
-        message.success("Вы успешно зарегистрировались!")}
+      <label>
+        Пароль:
+        <br />
+        <input
+          {...register("password", {
+            required: "Введите пароль!",
+            minLength: 1,
+            maxLength: {
+              value: 128,
+              message: "Максимальное число символов 128.",
+            },
+          })}
+        />
+        <br />
+      </label>
+      <div style={{ height: 20 }}>
+        {" "}
+        {errors.password && <p> {errors.password.message || "Error!"} </p>}{" "}
+      </div>
 
-      {registerResponseCode === 400 &&
-        message.warning("Такой пользователь уже зарегистрирован!")} */}
-
-      <Form.Item
-        label="Логин"
-        name="username"
-        rules={[
-          {
-            required: true,
-            message: "Введите логин!",
-          },
-        ]}
-      >
-        <Input />
-      </Form.Item>
-
-      <Form.Item
-        label="Пароль"
-        name="password"
-        rules={[
-          {
-            required: true,
-            message: "Введите пароль!",
-          },
-        ]}
-      >
-        <Input.Password />
-      </Form.Item>
-
-      <Form.Item
-        wrapperCol={{
-          offset: 8,
-          span: 16,
-        }}
-      >
-        <div className={style.buttonWrapper}>
-          <Button type="primary" htmlType="submit" className={style.register}>
-            Регистрация
-          </Button>
-          <Button
-            className={style.register}
-            onClick={goToBack}
-          >
-            Назад
-          </Button>
-        </div>
-      </Form.Item>
-    </Form>
+      <br />
+      <div className={style.buttonWrapper}>
+        <Button
+          type="primary"
+          htmlType="submit"
+          disabled={!isValid}
+          className={style.register}
+        >
+          Регистрация
+        </Button>
+        <Button className={style.register} onClick={goToBack}>
+          Назад
+        </Button>
+      </div>
+    </form>
   );
 };
 
