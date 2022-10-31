@@ -1,4 +1,4 @@
-import { Button, message } from "antd";
+import { Button } from "antd";
 import React from "react";
 import "antd/dist/antd.css";
 import style from "./Authorization.module.css";

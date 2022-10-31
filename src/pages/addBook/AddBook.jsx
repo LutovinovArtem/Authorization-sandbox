@@ -3,7 +3,7 @@ import { Form, Input, Button, Select } from "antd";
 import "antd/dist/antd.css";
 import { useNavigate } from "react-router-dom";
 import style from "./addBook.module.css";
-import AlertAddBook from "../../components/AlertAddBook";
+import AlertResponse from "../../components/AlertResponse";
 import { postBooks, getGenres, getCurrency } from "../../API/instanceBook";
 
 const { Option } = Select;
@@ -12,15 +12,15 @@ const AddBook = () => {
   const navigate = useNavigate();
   const goToBooks = () => navigate("/books");
 
-  const [addBook, setAddBook] = useState();
+  const [response, setResponse] = useState();
 
   const [form] = Form.useForm();
   const onFinish = (values) => {
     values.author = 1; // захардкодил
 
     postBooks(values)
-      .then((res) => setAddBook(res.request.status))
-      .catch((error) => setAddBook(error.request.status));
+      .then((res) => setResponse(res.request.status))
+      .catch((error) => setResponse(error.request.status));
 
     form.resetFields();
   };
@@ -94,7 +94,7 @@ const AddBook = () => {
           </Form.Item>
         </div>
 
-        <AlertAddBook response={addBook} />
+        <AlertResponse response={response} />
       </Form>
     </div>
   );

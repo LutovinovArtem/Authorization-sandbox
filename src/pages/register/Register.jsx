@@ -1,17 +1,25 @@
-import { Button, Form, Input } from "antd"; //message
+import { Button } from "antd"; //message
 import "antd/dist/antd.css";
-import React from "react";
+import React, { useState } from "react";
 import style from "./register.module.css";
 import { useNavigate } from "react-router-dom";
 import { registerUser } from "../../API/registerUser";
-
 import { useForm } from "react-hook-form";
+import AlertResponse from "../../components/AlertResponse";
 
 const Register = () => {
   const navigate = useNavigate();
 
+  const [response, setResponse] = useState();
+
   const onSubmit = (values) => {
-    registerUser(values);
+    registerUser(values).then((res) => setResponse(res.request.status + 25))
+    .catch((error) => {
+      if (error.response) {
+        setResponse(error.response.status + 25);
+      }
+    });
+
     reset();
   };
 
@@ -90,6 +98,8 @@ const Register = () => {
           Назад
         </Button>
       </div>
+      <br />
+      <AlertResponse response={response} />
     </form>
   );
 };

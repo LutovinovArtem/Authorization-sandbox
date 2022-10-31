@@ -3,16 +3,13 @@ import style from "./books.module.css";
 import "antd/dist/antd.css";
 import { Table, Space, Button } from "antd";
 import { AddButton } from "../../components/AddButton";
-import {
-  deleteBook,
-  getBooks,
-  getGenres,
-} from "../../API/instanceBook";
+import { deleteBook, getBooks, getGenres } from "../../API/instanceBook";
 import { useNavigate } from "react-router-dom";
+import AlertResponse from "../../components/AlertResponse";
 
 const Books = () => {
   const [books, setBooks] = useState([]);
-  console.log('books: ', books);
+  console.log("books: ", books);
 
   const asyncGetAndSetBooks = () => {
     (async () => {
@@ -35,14 +32,16 @@ const Books = () => {
     }));
   };
 
-
   useEffect(() => {
     asyncGetAndSetBooks();
   }, []);
 
+  const [response, setResponse] = useState();
+  console.log("setres: ", response);
   const handleDeleteClick = (id) => {
-    deleteBook(id).then(() => {
+    deleteBook(id).then((res) => {
       asyncGetAndSetBooks();
+      setResponse(res.status);
     });
   };
 
@@ -80,10 +79,7 @@ const Books = () => {
       render: (_, book) => (
         <Space size="middle">
           <div>
-            <Button
-              type="primary"
-              onClick={() => goToEditBook(book.id)}
-            >
+            <Button type="primary" onClick={() => goToEditBook(book.id)}>
               Редактировать {book.id}
             </Button>
           </div>
@@ -108,7 +104,8 @@ const Books = () => {
         <h1> Книги </h1>
         <AddButton />
       </div>
-      <Table dataSource={books} columns={columns} />;
+      <Table dataSource={books} columns={columns} />
+      <AlertResponse response={response} />
     </div>
   );
 };
