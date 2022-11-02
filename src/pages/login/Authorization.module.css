@@ -22,3 +22,7 @@
 .register {
     margin-right: 100px;
 }
+
+.toggleButton {
+  margin-left: 3px;
+}
