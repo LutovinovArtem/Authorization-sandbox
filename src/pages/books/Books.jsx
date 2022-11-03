@@ -5,24 +5,25 @@ import { Table, Space, Button } from "antd";
 import { AddButton } from "../../components/AddButton";
 import { deleteBook, getBooks, getGenres } from "../../API/instanceBook";
 import { useNavigate } from "react-router-dom";
-import AlertResponse from "../../components/AlertResponse";
+// import AlertResponse from "../../components/AlertResponse";
+
+import { useDispatch, useSelector } from "react-redux";
+import { updateBooks } from "../../store/bookSlice";
 
 const Books = () => {
-  const [books, setBooks] = useState([]);
-  console.log("books: ", books);
+  //render => useEffect => update state => render
 
-  const asyncGetAndSetBooks = () => {
-    (async () => {
-      const genres = await getGenres();
-      const books = await getBooks();
-      setBooks(getBooksRAW(genres, books));
-    })();
-  };
+  console.log("render");
+  const { books } = useSelector((state) => state.books);
+  const dispatch = useDispatch();
+
+  // const [books, setBooks] = useState([]);
 
   const getBooksRAW = (genres, books) => {
     return books.map((book) => ({
       key: book.id,
       ...book,
+      author: book.author.Name,
       genres: genres.reduce((acc, curr) => {
         if (book.genres.includes(curr.id)) {
           return [...acc, curr.title];
@@ -32,12 +33,23 @@ const Books = () => {
     }));
   };
 
+  const asyncGetAndSetBooks = () => {
+    (async () => {
+      const genres = await getGenres();
+      const books = await getBooks();
+      // setBooks(getBooksRAW(genres, books));
+      const newBooks = getBooksRAW(genres, books);
+      dispatch(updateBooks(newBooks));
+    })();
+  };
+
   useEffect(() => {
+    console.log("useEffect");
     asyncGetAndSetBooks();
   }, []);
 
   const [response, setResponse] = useState();
-  console.log("setres: ", response);
+
   const handleDeleteClick = (id) => {
     deleteBook(id).then((res) => {
       asyncGetAndSetBooks();
@@ -80,7 +92,7 @@ const Books = () => {
         <Space size="middle">
           <div>
             <Button type="primary" onClick={() => goToEditBook(book.id)}>
-              Редактировать {book.id}
+              Редактировать
             </Button>
           </div>
 
@@ -90,7 +102,7 @@ const Books = () => {
               type="primary"
               onClick={() => handleDeleteClick(book.id)}
             >
-              Удалить {book.id}
+              Удалить
             </Button>
           </div>
         </Space>
@@ -105,7 +117,7 @@ const Books = () => {
         <AddButton />
       </div>
       <Table dataSource={books} columns={columns} />
-      <AlertResponse response={response} />
+      {/* <AlertResponse response={response} /> */}
     </div>
   );
 };

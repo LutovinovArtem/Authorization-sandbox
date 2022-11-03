@@ -1,6 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
-import alertReducer from './slice';
+import booksReducer from "./bookSlice";
+
 
 export default configureStore({
-    reducer: {}
-})
+  reducer: {
+    books: booksReducer,
+  },
+});

@@ -3,7 +3,6 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
-  // Navigate,
 } from "react-router-dom";
 import Authorization from "./pages/login/Authorization";
 import Books from "./pages/books/Books";
