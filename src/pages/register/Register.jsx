@@ -1,4 +1,4 @@
-import { Button } from "antd"; //message
+import { Button } from "antd";
 import "antd/dist/antd.css";
 import React, { useState } from "react";
 import style from "./register.module.css";

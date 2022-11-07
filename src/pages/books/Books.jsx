@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import style from "./books.module.css";
 import "antd/dist/antd.css";
 import { Table, Space, Button } from "antd";
@@ -13,12 +13,13 @@ import { updateBooks } from "../../store/bookSlice";
 const Books = () => {
   //render => useEffect => update state => render
 
-  console.log("render");
-  const { books } = useSelector((state) => state.books);
+  const books  = useSelector((state) => state.books.books);
+
   const dispatch = useDispatch();
 
   // const [books, setBooks] = useState([]);
 
+  // useMemo, useCallback ?
   const getBooksRAW = (genres, books) => {
     return books.map((book) => ({
       key: book.id,
@@ -44,12 +45,10 @@ const Books = () => {
   };
 
   useEffect(() => {
-    console.log("useEffect");
     asyncGetAndSetBooks();
   }, []);
 
   const [response, setResponse] = useState();
-
   const handleDeleteClick = (id) => {
     deleteBook(id).then((res) => {
       asyncGetAndSetBooks();
@@ -86,7 +85,7 @@ const Books = () => {
       key: "price",
     },
     {
-      title: "Action",
+      title: "Действия",
       key: "action",
       render: (_, book) => (
         <Space size="middle">

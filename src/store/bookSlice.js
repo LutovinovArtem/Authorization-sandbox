@@ -6,9 +6,9 @@ const bookSlice = createSlice({
     books: []
   },
   reducers: {   
-    updateBooks: (state, action) => {
-      state.books.push(...action.payload);
-      console.log('action: ', action.payload);
+    updateBooks: (state, { payload }) => {
+      // state.books.push(...payload);
+      state.books = payload;
     },
   },
 });
