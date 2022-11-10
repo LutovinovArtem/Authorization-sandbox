@@ -5,7 +5,7 @@ import style from "./register.module.css";
 import { useNavigate } from "react-router-dom";
 import { registerUser } from "../../API/registerUser";
 import { useForm } from "react-hook-form";
-import AlertResponse from "../../components/AlertResponse";
+import { AlertResponse } from "../../components/AlertResponse";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -13,12 +13,13 @@ const Register = () => {
   const [response, setResponse] = useState();
 
   const onSubmit = (values) => {
-    registerUser(values).then((res) => setResponse(res.request.status + 25))
-    .catch((error) => {
-      if (error.response) {
-        setResponse(error.response.status + 25);
-      }
-    });
+    registerUser(values)
+      .then((res) => setResponse(res.request.status + 25))
+      .catch((error) => {
+        if (error.response) {
+          setResponse(error.response.status + 25);
+        }
+      });
 
     reset();
   };
@@ -81,7 +82,12 @@ const Register = () => {
       </label>
       <div style={{ height: 20 }}>
         {" "}
-        {errors.password && <p> {errors.password.message || "Error!"} </p>}{" "}
+        {errors.password && (
+          <p style={{ color: "red" }}>
+            {" "}
+            {errors.password.message || "Error!"}{" "}
+          </p>
+        )}{" "}
       </div>
 
       <br />

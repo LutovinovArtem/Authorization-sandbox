@@ -1,41 +1,41 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
+import { updateMessage, updateType } from "../store/alertSlice";
 import { Alert } from "antd";
+import { useDispatch, useSelector } from "react-redux";
 
-const AlertResponse = ({ response }) => {
-  let message = "";
-  let type = "";
-  // const [message, setMessage] = useState("");
-  // const [type, setType] = useState("");
+export const AlertResponse = ({ response }) => {
+  const dispatch = useDispatch();
 
-    function alertMessageAndType(messageText, typeText) {
-      // setMessage(messageText);
-      // setType(typeText);
-      message = messageText;
-      type = typeText;
-    }
+  const message = useSelector((state) => state.message.message)
+  const type = useSelector((state) => state.message.type)
 
-    switch (response) {
-      case 201:
-        alertMessageAndType("Книга успешно добавлена!", "success");
-        break;
-      case 400:
-        alertMessageAndType("Ошибка валидации!", "warning");
-        break;
-      case 500:
-        alertMessageAndType("Ошибка со стороны сервера!", "error");
-        break;
-      case 204:
-        alertMessageAndType("Книга успешно удалена!", "success");
-        break;
-      case 226: // 226 тк в получении захардкодил + 25 и не было пересечения с книгами // регистрация
-        alertMessageAndType("Вы успешно зарегистрированы!", "success");
-        break;
-      case 425: // 425 тк в получении захардкодил + 25 и не было пересечения с книгами // регистрация
-        alertMessageAndType("Такой пользователь уже существует!", "error");
-        break;
-      default: 
-        return null;
-    }
+  const alertMessageAndType = (messageText, typeText) => {
+    dispatch(updateMessage(messageText));
+    dispatch(updateType(typeText));
+  }
+
+  switch (response) {
+    case 201:
+      alertMessageAndType("Книга успешно добавлена!", "success");
+      break;
+    case 400:
+      alertMessageAndType("Ошибка валидации!", "warning");
+      break;
+    case 500:
+      alertMessageAndType("Ошибка со стороны сервера!", "error");
+      break;
+    case 204:
+      alertMessageAndType("Книга успешно удалена!", "success");
+      break;
+    case 226: // 226 тк в получении захардкодил + 25 и не было пересечения с книгами // регистрация
+      alertMessageAndType("Вы успешно зарегистрированы!", "success");
+      break;
+    case 425: // 425 тк в получении захардкодил + 25 и не было пересечения с книгами // регистрация
+      alertMessageAndType("Такой пользователь уже существует!", "error");
+      break;
+    default:
+      return null;
+  }
 
   return (
     <div>
@@ -43,5 +43,3 @@ const AlertResponse = ({ response }) => {
     </div>
   );
 };
-
-export default AlertResponse;

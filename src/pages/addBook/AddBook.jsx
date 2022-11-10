@@ -3,14 +3,18 @@ import { Form, Input, Button, Select } from "antd";
 import "antd/dist/antd.css";
 import { useNavigate } from "react-router-dom";
 import style from "./addBook.module.css";
-import AlertResponse from "../../components/AlertResponse";
+import { AlertResponse } from "../../components/AlertResponse";
 import { postBooks, getGenres, getCurrency } from "../../API/instanceBook";
+// import { useDispatch } from "react-redux";
+// import { updateResponse } from "../../store/responseSliсe";
 
 const { Option } = Select;
 
 const AddBook = () => {
   const navigate = useNavigate();
   const goToBooks = () => navigate("/books");
+
+  // const dispatch = useDispatch();
 
   const [response, setResponse] = useState();
 
@@ -94,7 +98,7 @@ const AddBook = () => {
           </Form.Item>
         </div>
 
-        <AlertResponse response={response} />
+        <AlertResponse response={response}/>
       </Form>
     </div>
   );

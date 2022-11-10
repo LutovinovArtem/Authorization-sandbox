@@ -3,23 +3,18 @@ import style from "./books.module.css";
 import "antd/dist/antd.css";
 import { Table, Space, Button } from "antd";
 import { AddButton } from "../../components/AddButton";
+import { Loader } from "../../components/Loader/Loader";
 import { deleteBook, getBooks, getGenres } from "../../API/instanceBook";
 import { useNavigate } from "react-router-dom";
-// import AlertResponse from "../../components/AlertResponse";
-
+import { AlertResponse } from "../../components/AlertResponse";
 import { useDispatch, useSelector } from "react-redux";
 import { updateBooks } from "../../store/bookSlice";
+import { updateLoader } from "../../store/loaderSlice";
 
 const Books = () => {
-  //render => useEffect => update state => render
+  const books = useSelector((state) => state.books.books);
+  const isLoading = useSelector((state) => state.loader.isLoading);
 
-  const books  = useSelector((state) => state.books.books);
-
-  const dispatch = useDispatch();
-
-  // const [books, setBooks] = useState([]);
-
-  // useMemo, useCallback ?
   const getBooksRAW = (genres, books) => {
     return books.map((book) => ({
       key: book.id,
@@ -34,15 +29,16 @@ const Books = () => {
     }));
   };
 
-  const asyncGetAndSetBooks = () => {
+  const dispatch = useDispatch();
+  const asyncGetAndSetBooks = useCallback(() => {
     (async () => {
       const genres = await getGenres();
       const books = await getBooks();
-      // setBooks(getBooksRAW(genres, books));
       const newBooks = getBooksRAW(genres, books);
       dispatch(updateBooks(newBooks));
+      dispatch(updateLoader(false));
     })();
-  };
+  }, [books]);
 
   useEffect(() => {
     asyncGetAndSetBooks();
@@ -57,7 +53,6 @@ const Books = () => {
   };
 
   const navigate = useNavigate();
-
   const goToEditBook = (id) => {
     navigate(`/editBook/${id}`);
   };
@@ -110,13 +105,19 @@ const Books = () => {
   ];
 
   return (
-    <div className={style.table}>
-      <div className={style.tableHeader}>
-        <h1> Книги </h1>
-        <AddButton />
-      </div>
-      <Table dataSource={books} columns={columns} />
-      {/* <AlertResponse response={response} /> */}
+    <div>
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <div className={style.table}>
+          <div className={style.tableHeader}>
+            <h1> Книги </h1>
+            <AlertResponse response={response} />
+            <AddButton />
+          </div>
+          <Table dataSource={books} columns={columns} />
+        </div>
+      )}
     </div>
   );
 };
