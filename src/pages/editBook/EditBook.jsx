@@ -12,9 +12,9 @@ const EditBook = () => {
   const getBooksRAW = (genres, bookRAW) => {
     return {
       ...bookRAW,
-      genres: genres.reduce((acc, curr) => {
-        if (bookRAW.genres.includes(curr.id)) {
-          return [...acc, curr.title];
+      genres: genres.reduce((acc, { id, title }) => { // current => id, title
+        if (bookRAW.genres.includes(id)) {
+          return [...acc, title];
         }
         return acc;
       }, []),

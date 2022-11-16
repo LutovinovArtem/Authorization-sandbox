@@ -4,17 +4,17 @@ import "antd/dist/antd.css";
 import { useNavigate } from "react-router-dom";
 import style from "./addBook.module.css";
 import { AlertResponse } from "../../components/AlertResponse";
-import { postBooks, getGenres, getCurrency } from "../../API/instanceBook";
-// import { useDispatch } from "react-redux";
+import { getGenres, getCurrency } from "../../API/instanceBook";
+import { useDispatch } from "react-redux";
 // import { updateResponse } from "../../store/responseSliсe";
+import { addBook } from "../../store/bookSlice";
 
 const { Option } = Select;
 
 const AddBook = () => {
   const navigate = useNavigate();
   const goToBooks = () => navigate("/books");
-
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
   const [response, setResponse] = useState();
 
@@ -22,9 +22,11 @@ const AddBook = () => {
   const onFinish = (values) => {
     values.author = 1; // захардкодил
 
-    postBooks(values)
-      .then((res) => setResponse(res.request.status))
-      .catch((error) => setResponse(error.request.status));
+    // postBooks(values)
+    //   .then((res) => setResponse(res.request.status))
+    //   .catch((error) => setResponse(error.request.status));
+    
+    dispatch(addBook(values));
 
     form.resetFields();
   };

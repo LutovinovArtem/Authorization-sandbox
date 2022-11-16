@@ -1,58 +1,30 @@
-import React, { useState, useEffect, useCallback } from "react";
 import style from "./books.module.css";
 import "antd/dist/antd.css";
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { Table, Space, Button } from "antd";
 import { AddButton } from "../../components/AddButton";
 import { Loader } from "../../components/Loader/Loader";
-import { deleteBook, getBooks, getGenres } from "../../API/instanceBook";
-import { useNavigate } from "react-router-dom";
 import { AlertResponse } from "../../components/AlertResponse";
-import { useDispatch, useSelector } from "react-redux";
-import { updateBooks } from "../../store/bookSlice";
-import { updateLoader } from "../../store/loaderSlice";
+import { getBooks, deleteBook } from "../../store/bookSlice";
 
 const Books = () => {
-  const books = useSelector((state) => state.books.books);
-  const isLoading = useSelector((state) => state.loader.isLoading);
-
-  const getBooksRAW = (genres, books) => {
-    return books.map((book) => ({
-      key: book.id,
-      ...book,
-      author: book.author.Name,
-      genres: genres.reduce((acc, curr) => {
-        if (book.genres.includes(curr.id)) {
-          return [...acc, curr.title];
-        }
-        return acc;
-      }, []),
-    }));
-  };
-
+  const navigate = useNavigate();
   const dispatch = useDispatch();
-  const asyncGetAndSetBooks = useCallback(() => {
-    (async () => {
-      const genres = await getGenres();
-      const books = await getBooks();
-      const newBooks = getBooksRAW(genres, books);
-      dispatch(updateBooks(newBooks));
-      dispatch(updateLoader(false));
-    })();
-  }, [books]);
+
+  const { books, isLoading, error } = useSelector((state) => state.books);
+
+  // const [response, setResponse] = useState();
 
   useEffect(() => {
-    asyncGetAndSetBooks();
+    dispatch(getBooks());
   }, []);
 
-  const [response, setResponse] = useState();
   const handleDeleteClick = (id) => {
-    deleteBook(id).then((res) => {
-      asyncGetAndSetBooks();
-      setResponse(res.status);
-    });
+    dispatch(deleteBook(id));
   };
 
-  const navigate = useNavigate();
   const goToEditBook = (id) => {
     navigate(`/editBook/${id}`);
   };
@@ -82,20 +54,19 @@ const Books = () => {
     {
       title: "Действия",
       key: "action",
-      render: (_, book) => (
+      render: (
+        _,
+        { id } // book => id
+      ) => (
         <Space size="middle">
           <div>
-            <Button type="primary" onClick={() => goToEditBook(book.id)}>
+            <Button type="primary" onClick={() => goToEditBook(id)}>
               Редактировать
             </Button>
           </div>
 
           <div>
-            <Button
-              danger
-              type="primary"
-              onClick={() => handleDeleteClick(book.id)}
-            >
+            <Button danger type="primary" onClick={() => handleDeleteClick(id)}>
               Удалить
             </Button>
           </div>
@@ -106,13 +77,15 @@ const Books = () => {
 
   return (
     <div>
+      {error && <h2> Error: {error}</h2>}
+
       {isLoading ? (
         <Loader />
       ) : (
         <div className={style.table}>
           <div className={style.tableHeader}>
             <h1> Книги </h1>
-            <AlertResponse response={response} />
+            <AlertResponse /> {/* response={response} */}
             <AddButton />
           </div>
           <Table dataSource={books} columns={columns} />

@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Form, Input, Button, Select } from "antd";
 import { useNavigate } from "react-router-dom";
-import { getGenres, getCurrency, putBook } from "../../API/instanceBook";
+import { getGenres, getCurrency } from "../../API/instanceBook";
 import "antd/dist/antd.css";
 import style from "./editBook.module.css";
+import { editBook } from "../../store/bookSlice";
+import { useDispatch } from "react-redux/es/exports";
 
 const { Option } = Select;
 
@@ -11,11 +13,14 @@ const EditBookForm = ({ book, id }) => {
   const navigate = useNavigate();
   const goToBooks = () => navigate("/books");
 
+  const dispatch = useDispatch();
+
   const [form] = Form.useForm();
 
   const onFinish = (values) => {
     values.author = 1; // захардкодил
-    putBook(id, values).then((res) => console.log("res:", res));
+    // putBook(id, values).then((res) => console.log("res:", res));
+    dispatch(editBook(values));
     form.resetFields();
   };
 

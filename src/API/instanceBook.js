@@ -3,18 +3,18 @@ import { instance } from "./axios";
 export const deleteBook = (bookID) =>
   instance
     .delete(`books/${bookID}/`)
-    .then((res) => res)
+    .then((response) => response)
     .catch((error) => {
       console.log("ErrorBooks:", error);
     });
 
-export const getGenres = () => instance.get(`genres`).then((res) => res.data);
+export const getGenres = () => instance.get(`genres`).then((response) => response.data);
 
 export const getBooks = () =>
   instance.get("books").then((response) => response.data);
 
 export const getOneBook = (id) =>
-  instance.get(`books/${id}`).then((res) => res.data);
+  instance.get(`books/${id}`).then((response) => response.data);
 
 export const postBooks = (values) =>
   instance

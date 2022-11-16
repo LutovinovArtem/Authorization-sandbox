@@ -6,8 +6,8 @@ import { useDispatch, useSelector } from "react-redux";
 export const AlertResponse = ({ response }) => {
   const dispatch = useDispatch();
 
-  const message = useSelector((state) => state.message.message)
-  const type = useSelector((state) => state.message.type)
+  const { message } = useSelector((state) => state.message)
+  const { type } = useSelector((state) => state.message)
 
   const alertMessageAndType = (messageText, typeText) => {
     dispatch(updateMessage(messageText));
