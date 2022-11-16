@@ -20,7 +20,7 @@ const EditBookForm = ({ book, id }) => {
   const onFinish = (values) => {
     values.author = 1; // захардкодил
     // putBook(id, values).then((res) => console.log("res:", res));
-    dispatch(editBook(values));
+    dispatch(editBook(values, id));
     form.resetFields();
   };
 

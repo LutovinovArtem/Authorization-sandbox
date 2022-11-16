@@ -5,6 +5,7 @@ import {
   deleteBook as deleteBookAPI,
   postBooks,
   putBook,
+  getOneBook,
 } from "../API/instanceBook";
 
 const getBooksRAW = (genres, books) => {
@@ -33,7 +34,9 @@ export const getBooks = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const genres = await getGenres().then((response) => checkError(response));
-      const books = await getBooksAPI().then((response) => checkError(response));
+      const books = await getBooksAPI().then((response) =>
+        checkError(response)
+      );
 
       const booksRAW = getBooksRAW(genres, books);
 
@@ -63,8 +66,7 @@ export const addBook = createAsyncThunk(
     try {
       await postBooks(value).then((response) => checkError(response));
 
-      const books = getBooksAPI();
-      dispatch(updateBooks(books));
+      dispatch(addedBook(value));
     } catch (error) {
       return rejectWithValue(`addBook - ${error.message}`);
     }
@@ -73,12 +75,13 @@ export const addBook = createAsyncThunk(
 
 export const editBook = createAsyncThunk(
   "books/editBook",
-  async (value, { rejectWithValue, dispatch }) => {
+  async (value, id, { rejectWithValue, dispatch }) => {
     try {
-      await putBook(value).then((response) => checkError(response));
-
-      const books = getBooksAPI();
-      dispatch(updateBooks(books));
+      await putBook(value, id).then((response) => checkError(response));
+      // тут вообще не уверен
+      // пока так
+      const book = getOneBook();
+      dispatch(replaceBook(book));
     } catch (error) {
       return rejectWithValue(`editBook - ${error.message}`);
     }
@@ -104,6 +107,19 @@ const booksSlice = createSlice({
     removeBook: (state, { payload }) => {
       state.books = state.books.filter((book) => book.id !== payload.id);
     },
+    addedBook: (state, { payload }) => {
+      state.books.push(payload);
+    },
+    replaceBook: (state, { payload }) => {
+      // Вот тут вообще не уверен
+      state.books = state.books.find((book, index) => {
+        if(book.id === payload.id) {
+          // delete state.books[index];
+          // state.books.push(payload);
+          state.books[index] = payload;
+        }
+      });
+    },
   },
   extraReducers: {
     [getBooks.pending]: (state) => {
@@ -121,6 +137,6 @@ const booksSlice = createSlice({
   },
 });
 
-const { updateBooks, removeBook } = booksSlice.actions;
+const { updateBooks, removeBook, replaceBook, addedBook } = booksSlice.actions;
 
 export default booksSlice.reducer;
