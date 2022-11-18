@@ -22,18 +22,16 @@ const getBooksRAW = (genres, books) => {
   }));
 };
 
-const checkError = (response) => {
-  if (!response.status) {
-    throw new Error("Error");
-  }
-};
-
 export const getBooks = createAsyncThunk(
   "books/getBooks",
   async (_, { rejectWithValue }) => {
     try {
-      const genres = await getGenres().then((response) => checkError(response));
-      const books = await getBooksAPI().then((response) => checkError(response));
+      const genres = await getGenres();
+      const books = await getBooksAPI();
+
+      if (genres.status !== 201 || books.status !== 201) {
+        throw new Error("Error");
+      }
 
       const booksRAW = getBooksRAW(genres, books);
 
@@ -48,7 +46,11 @@ export const deleteBook = createAsyncThunk(
   "books/deleteBook",
   async (id, { rejectWithValue, dispatch }) => {
     try {
-      await deleteBookAPI(id).then((response) => checkError(response));
+      const response = await deleteBookAPI(id);
+
+      if (response.status !== 204) {
+        throw new Error("Error");
+      }
 
       dispatch(removeBook(id));
     } catch (error) {
@@ -61,7 +63,11 @@ export const addBook = createAsyncThunk(
   "books/addBook",
   async (value, { rejectWithValue, dispatch }) => {
     try {
-      await postBooks(value).then((response) => checkError(response));
+      const response = await postBooks(value);
+
+      if (response !== 201) {
+        throw new Error("Error");
+      }
 
       dispatch(addedBook(value));
     } catch (error) {
@@ -72,13 +78,16 @@ export const addBook = createAsyncThunk(
 
 export const editBook = createAsyncThunk(
   "books/editBook",
-  async (value, id, { rejectWithValue, dispatch }) => {
+  async ({ value, id }, { rejectWithValue, dispatch }) => {
     try {
-      await putBook(value, id).then((response) => checkError(response));
-      // тут вообще не уверен
-      // пока так
+      // const { value, id } = data;
+      const response = await putBook(value, id);
 
-      dispatch(replaceBook(value)); // value ?
+      if (response !== 201) {
+        throw new Error("Error");
+      }
+
+      dispatch(replaceBook(data));
     } catch (error) {
       return rejectWithValue(`editBook - ${error.message}`);
     }
@@ -102,16 +111,22 @@ const booksSlice = createSlice({
       state.books = payload;
     },
     removeBook: (state, { payload }) => {
-      state.books = state.books.filter((book) => book.id !== payload); // было payload.id
+      state.books = state.books.filter((book) => book.id === payload);
     },
     addedBook: (state, { payload }) => {
       state.books.push(payload);
     },
     replaceBook: (state, { payload }) => {
       // Вот тут вообще не уверен
-      state.books = state.books.map((book, index) => { // map ?
+
+      // state.books = state.books.map((book, index) => {
+      // if (book.id === payload.id) {
+      //   state.books[index] = payload;
+      // }
+
+      state.books = state.books.forEach((book) => {
         if (book.id === payload.id) {
-          state.books[index] = payload;
+          book = payload.value;
         }
       });
     },

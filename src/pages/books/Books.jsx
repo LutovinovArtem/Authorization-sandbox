@@ -76,7 +76,7 @@ const Books = () => {
   ];
 
   return (
-    <div>
+    <>
       {error && <h2> Error: {error}</h2>}
 
       {isLoading ? (
@@ -91,7 +91,7 @@ const Books = () => {
           <Table dataSource={books} columns={columns} />
         </div>
       )}
-    </div>
+    </>
   );
 };
 
