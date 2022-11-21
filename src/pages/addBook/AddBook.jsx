@@ -1,48 +1,37 @@
-import React, { useState, useEffect } from "react";
-import { Form, Input, Button, Select } from "antd";
-import "antd/dist/antd.css";
-import { useNavigate } from "react-router-dom";
+import React from "react";
 import style from "./addBook.module.css";
+import "antd/dist/antd.css";
+import { Form, Input, Button, Select } from "antd";
+import { useNavigate } from "react-router-dom";
 import { AlertResponse } from "../../components/AlertResponse";
-import { getGenres, getCurrency } from "../../API/instanceBook";
-import { useDispatch } from "react-redux";
-// import { updateResponse } from "../../store/responseSliсe";
-import { addBook } from "../../store/bookSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { addBookAsync } from "../../store/bookSlice";
+import { selectGenres, selectCurrency } from "../../store/selectors";
+
 
 const { Option } = Select;
 
 const AddBook = () => {
+  // const [response, setResponse] = useState();
   const navigate = useNavigate();
   const goToBooks = () => navigate("/books");
   const dispatch = useDispatch();
 
-  const [response, setResponse] = useState();
-
   const [form] = Form.useForm();
+
+  const genres = useSelector(selectGenres);
+  const currency = useSelector(selectCurrency);
+  
   const onFinish = (values) => {
     values.author = 1; // захардкодил
-
-    // postBooks(values)
-    //   .then((res) => setResponse(res.request.status))
-    //   .catch((error) => setResponse(error.request.status));
     
-    dispatch(addBook(values));
+    dispatch(addBookAsync(values));
 
     form.resetFields();
   };
 
-  const [genres, setGenres] = useState([]);
-  useEffect(() => {
-    getGenres().then((res) => setGenres(res));
-  }, []);
-
-  const [currency, setСurrency] = useState([]);
-  useEffect(() => {
-    getCurrency().then((res) => setСurrency(res));
-  }, []);
-
   return (
-    <div>
+    <>
       <h1>Добавление книги</h1>
       <Form
         labelCol={{ span: 4 }}
@@ -100,9 +89,9 @@ const AddBook = () => {
           </Form.Item>
         </div>
 
-        <AlertResponse response={response}/>
+        <AlertResponse />  {/* response={response} */}
       </Form>
-    </div>
+    </>
   );
 };
 

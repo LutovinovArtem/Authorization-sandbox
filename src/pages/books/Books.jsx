@@ -8,14 +8,23 @@ import { AddButton } from "../../components/AddButton";
 import { Loader } from "../../components/Loader/Loader";
 import { AlertResponse } from "../../components/AlertResponse";
 import { getBooks, deleteBook } from "../../store/bookSlice";
+import {
+  // selectBooks,
+  // selectIsLoading,
+  // selectError,
+  selectFromBookSlice,
+} from "../../store/selectors";
 
 const Books = () => {
+  // const [response, setResponse] = useState();
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { books, isLoading, error } = useSelector((state) => state.books);
+  const { books, isLoading, error } = useSelector(selectFromBookSlice);
 
-  // const [response, setResponse] = useState();
+  // const books = useSelector(selectBooks);
+  // const error = useSelector(selectError);
+  // const isLoading = useSelector(selectIsLoading);
 
   useEffect(() => {
     dispatch(getBooks());
@@ -75,23 +84,23 @@ const Books = () => {
     },
   ];
 
-  return (
-    <>
-      {error && <h2> Error: {error}</h2>}
+  if (error) {
+    return <h2> Error: {error}</h2>;
+  }
 
-      {isLoading ? (
-        <Loader />
-      ) : (
-        <div className={style.table}>
-          <div className={style.tableHeader}>
-            <h1> Книги </h1>
-            <AlertResponse /> {/* response={response} */}
-            <AddButton />
-          </div>
-          <Table dataSource={books} columns={columns} />
-        </div>
-      )}
-    </>
+  if (isLoading) {
+    return <Loader />;
+  }
+
+  return (
+    <div className={style.table}>
+      <div className={style.tableHeader}>
+        <h1> Книги </h1>
+        <AlertResponse />
+        <AddButton />
+      </div>
+      <Table dataSource={books} columns={columns} />
+    </div>
   );
 };
 

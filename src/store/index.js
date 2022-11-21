@@ -1,10 +1,15 @@
 import { configureStore } from "@reduxjs/toolkit";
+
 import booksReducer from "./bookSlice";
-import messageReducer from "./alertSlice"
+import genresReducer from "./genresSlice";
+import currencyReducer from "./currencySlice";
+// import messageReducer from "./alertSlice";
 
 export default configureStore({
   reducer: {
     books: booksReducer,
-    message: messageReducer,
+    genres: genresReducer,
+    currency: currencyReducer,
+    // message: messageReducer,
   },
 });

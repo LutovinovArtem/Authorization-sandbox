@@ -9,8 +9,8 @@ import {
 
 const getBooksRAW = (genres, books) => {
   return books.map((book) => ({
-    key: book.id,
     ...book,
+    key: book.id,
     author: book.author.Name,
     // curr => id, title
     genres: genres.reduce((acc, { id, title }) => {
@@ -59,8 +59,8 @@ export const deleteBook = createAsyncThunk(
   }
 );
 
-export const addBook = createAsyncThunk(
-  "books/addBook",
+export const addBookAsync = createAsyncThunk(
+  "books/addBookAsync",
   async (value, { rejectWithValue, dispatch }) => {
     try {
       const response = await postBooks(value);
@@ -69,7 +69,7 @@ export const addBook = createAsyncThunk(
         throw new Error("Error");
       }
 
-      dispatch(addedBook(value));
+      dispatch(addBook(value));
     } catch (error) {
       return rejectWithValue(`addBook - ${error.message}`);
     }
@@ -78,16 +78,16 @@ export const addBook = createAsyncThunk(
 
 export const editBook = createAsyncThunk(
   "books/editBook",
-  async ({ value, id }, { rejectWithValue, dispatch }) => {
+  async (data, { rejectWithValue, dispatch }) => {
     try {
-      // const { value, id } = data;
+      const { value, id } = data;
       const response = await putBook(value, id);
 
       if (response !== 201) {
         throw new Error("Error");
       }
 
-      dispatch(replaceBook(data));
+      dispatch(changeBook(data));
     } catch (error) {
       return rejectWithValue(`editBook - ${error.message}`);
     }
@@ -96,6 +96,7 @@ export const editBook = createAsyncThunk(
 
 const setError = (state, { payload }) => {
   state.status = "rejected";
+  state.isLoading = false;
   state.error = payload;
 };
 
@@ -107,16 +108,16 @@ const booksSlice = createSlice({
     error: null,
   },
   reducers: {
-    updateBooks: (state, { payload }) => {
-      state.books = payload;
-    },
+    // updateBooks: (state, { payload }) => {
+    //   state.books = payload;
+    // },
     removeBook: (state, { payload }) => {
-      state.books = state.books.filter((book) => book.id === payload);
+      state.books = state.books.filter((book) => book.id !== payload);
     },
-    addedBook: (state, { payload }) => {
+    addBook: (state, { payload }) => {
       state.books.push(payload);
     },
-    replaceBook: (state, { payload }) => {
+    changeBook: (state, { payload }) => {
       // Вот тут вообще не уверен
 
       // state.books = state.books.map((book, index) => {
@@ -129,6 +130,12 @@ const booksSlice = createSlice({
           book = payload.value;
         }
       });
+
+      // const finedBook = state.books.find(({id}) => id === payload.id);
+      // state.books.find(({id}) => id === payload.id) = {
+      //   ...finedBook,
+      //   ...payload
+      // }
     },
   },
   extraReducers: {
@@ -142,11 +149,11 @@ const booksSlice = createSlice({
     },
     [getBooks.rejected]: setError,
     [deleteBook.rejected]: setError,
-    [addBook.rejected]: setError,
+    [addBookAsync.rejected]: setError,
     [editBook.rejected]: setError,
   },
 });
 
-const { updateBooks, removeBook, replaceBook, addedBook } = booksSlice.actions;
+const { removeBook, changeBook, addBook } = booksSlice.actions;
 
 export default booksSlice.reducer;
