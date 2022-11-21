@@ -1,9 +1,9 @@
 import React from "react";
 import "antd/dist/antd.css";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import style from "./editBook.module.css";
 import { Form, Input, Button, Select } from "antd";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { editBook } from "../../store/bookSlice";
 import {
@@ -18,8 +18,8 @@ const EditBook = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
 
-  const navigate = useNavigate();
-  const goToBooks = () => navigate("/books");
+  // const navigate = useNavigate();
+  // const goToBooks = () => navigate("/books");
 
   const [form] = Form.useForm();
 
@@ -98,7 +98,9 @@ const EditBook = () => {
           </Form.Item>
 
           <Form.Item>
-            <Button onClick={goToBooks}> Назад </Button>
+            <Link to="/books">
+              <Button> Назад </Button>
+            </Link>
           </Form.Item>
         </div>
 

@@ -2,13 +2,13 @@ import { Button } from "antd";
 import React, { useState } from "react";
 import "antd/dist/antd.css";
 import style from "./Authorization.module.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { getToken } from "../../API/getToken";
 import { useForm } from "react-hook-form";
 
 const Authorization = () => {
   const navigate = useNavigate();
-  const goToRegister = () => navigate("/register");
+  // const goToRegister = () => navigate("/register");
 
   const onSubmit = (values) => {
     getToken(values).then(({ data: { access } }) => {
@@ -20,7 +20,7 @@ const Authorization = () => {
 
   const [passwordType, setPasswordType] = useState("password");
   const [toggleText, setToggleText] = useState("show");
-  
+
   const togglePasswordType = () => {
     if (passwordType === "password") {
       setToggleText("hide");
@@ -116,9 +116,11 @@ const Authorization = () => {
           Авторизация
         </Button>
 
-        <Button className={style.register} onClick={goToRegister}>
-          Регистрация
-        </Button>
+        <Link to="/register">
+          <Button className={style.register}>
+            Регистрация
+          </Button>
+        </Link>
       </div>
     </form>
   );
