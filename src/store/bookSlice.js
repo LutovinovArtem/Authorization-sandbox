@@ -7,6 +7,9 @@ import {
   putBook,
 } from "../API/instanceBook";
 
+import { selectGenres } from "./selectors";
+import { useSelector } from "react-redux";
+
 const getBooksRAW = (genres, books) => {
   return books.map((book) => ({
     ...book,
@@ -24,9 +27,13 @@ const getBooksRAW = (genres, books) => {
 
 export const getBooks = createAsyncThunk(
   "books/getBooks",
-  async (_, { rejectWithValue }) => {
+  async (_, { rejectWithValue, dispatch }) => {
     try {
-      const genres = await getGenres(); // диспатчить
+      
+      // const genres = await getGenres(); // диспатчить
+      dispatch(getGenres());
+      const genres = useSelector(selectGenres);
+
       const books = await getBooksAPI();
 
       if (genres.status !== 201 || books.status !== 201) {

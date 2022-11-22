@@ -22,11 +22,6 @@ const Books = () => {
   const error = useSelector(reselectError);
   const isLoading = useSelector(reselectIsLoading);
 
-  // const books = useSelector(selectFromBookSlice);
-  // const error = useSelector(selectFromBookSlice);
-  // const isLoading = useSelector(selectFromBookSlice);
-
-
   useEffect(() => {
     dispatch(getBooks());
   }, []);
