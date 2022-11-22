@@ -26,7 +26,7 @@ export const getBooks = createAsyncThunk(
   "books/getBooks",
   async (_, { rejectWithValue }) => {
     try {
-      const genres = await getGenres();
+      const genres = await getGenres(); // диспатчить
       const books = await getBooksAPI();
 
       if (genres.status !== 201 || books.status !== 201) {
@@ -108,9 +108,6 @@ const booksSlice = createSlice({
     error: null,
   },
   reducers: {
-    // updateBooks: (state, { payload }) => {
-    //   state.books = payload;
-    // },
     removeBook: (state, { payload }) => {
       state.books = state.books.filter((book) => book.id !== payload);
     },
@@ -120,16 +117,16 @@ const booksSlice = createSlice({
     changeBook: (state, { payload }) => {
       // Вот тут вообще не уверен
 
-      // state.books = state.books.map((book, index) => {
-      // if (book.id === payload.id) {
-      //   state.books[index] = payload;
-      // }
-
       state.books = state.books.forEach((book) => {
         if (book.id === payload.id) {
           book = payload.value;
         }
       });
+
+      // state.books = state.books.map((book, index) => {
+      // if (book.id === payload.id) {
+      //   state.books[index] = payload;
+      // }
 
       // const finedBook = state.books.find(({id}) => id === payload.id);
       // state.books.find(({id}) => id === payload.id) = {

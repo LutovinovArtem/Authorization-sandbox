@@ -9,22 +9,23 @@ import { Loader } from "../../components/Loader/Loader";
 import { AlertResponse } from "../../components/AlertResponse";
 import { getBooks, deleteBook } from "../../store/bookSlice";
 import {
-  // selectBooks,
-  // selectIsLoading,
-  // selectError,
-  selectFromBookSlice,
+  reselectBooks,
+  reselectIsLoading,
+  reselectError,
 } from "../../store/selectors";
 
 const Books = () => {
-  // const [response, setResponse] = useState();
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { books, isLoading, error } = useSelector(selectFromBookSlice);
+  const books = useSelector(reselectBooks);
+  const error = useSelector(reselectError);
+  const isLoading = useSelector(reselectIsLoading);
 
-  // const books = useSelector(selectBooks);
-  // const error = useSelector(selectError);
-  // const isLoading = useSelector(selectIsLoading);
+  // const books = useSelector(selectFromBookSlice);
+  // const error = useSelector(selectFromBookSlice);
+  // const isLoading = useSelector(selectFromBookSlice);
+
 
   useEffect(() => {
     dispatch(getBooks());
@@ -84,12 +85,12 @@ const Books = () => {
     },
   ];
 
-  if (error) {
-    return <h2> Error: {error}</h2>;
-  }
-
   if (isLoading) {
     return <Loader />;
+  }
+
+  if (error) {
+    return <h2> Error: {error}</h2>;
   }
 
   return (

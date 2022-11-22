@@ -2,7 +2,7 @@ import React from "react";
 import style from "./addBook.module.css";
 import "antd/dist/antd.css";
 import { Form, Input, Button, Select } from "antd";
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { AlertResponse } from "../../components/AlertResponse";
 import { useDispatch, useSelector } from "react-redux";
 import { addBookAsync } from "../../store/bookSlice";
@@ -11,9 +11,7 @@ import { selectGenres, selectCurrency } from "../../store/selectors";
 const { Option } = Select;
 
 const AddBook = () => {
-  // const [response, setResponse] = useState();
-  // const navigate = useNavigate();
-  // const goToBooks = () => navigate("/books");
+
   const dispatch = useDispatch();
 
   const [form] = Form.useForm();

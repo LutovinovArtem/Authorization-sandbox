@@ -2,14 +2,12 @@ import { Button } from "antd";
 import "antd/dist/antd.css";
 import React, { useState } from "react";
 import style from "./register.module.css";
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { registerUser } from "../../API/registerUser";
 import { useForm } from "react-hook-form";
 import { AlertResponse } from "../../components/AlertResponse";
 
 const Register = () => {
-  // const navigate = useNavigate();
-
   const [response, setResponse] = useState();
 
   const onSubmit = (values) => {
@@ -23,10 +21,6 @@ const Register = () => {
 
     reset();
   };
-
-  // const goToBack = () => {
-  //   navigate("/");
-  // };
 
   const {
     register,

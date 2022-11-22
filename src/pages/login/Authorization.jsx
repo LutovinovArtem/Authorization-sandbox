@@ -8,7 +8,6 @@ import { useForm } from "react-hook-form";
 
 const Authorization = () => {
   const navigate = useNavigate();
-  // const goToRegister = () => navigate("/register");
 
   const onSubmit = (values) => {
     getToken(values).then(({ data: { access } }) => {

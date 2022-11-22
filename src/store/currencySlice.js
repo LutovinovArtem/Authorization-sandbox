@@ -7,7 +7,7 @@ export const getCurrency = createAsyncThunk(
     try {
       const currency = await getCurrencyAPI();
 
-      if (currency.status !== 201) {
+      if (currency.status !== 201) { // сделать статусы константами
         throw new Error("Error");
       }
 
@@ -29,11 +29,6 @@ const currencySlice = createSlice({
   initialState: {
     currency: [],
   },
-//   reducers: {
-//     updateCurrency: (state, { payload }) => {
-//       state.currency = payload;
-//     },
-//   },
   extraReducers: {
     [getCurrency.pending]: (state) => {
       state.error = null;
@@ -44,7 +39,5 @@ const currencySlice = createSlice({
     [getCurrency.rejected]: setError,
   },
 });
-
-// const {  } = currencySlice.actions;
 
 export default currencySlice.reducer;

@@ -29,11 +29,6 @@ const genresSlice = createSlice({
   initialState: {
     genres: [],
   },
-//   reducers: {
-//     updateGenres: (state, { payload }) => {
-//       state.genres = payload;
-//     },
-//   },
   extraReducers: {
     [getGenres.pending]: (state) => {
       state.error = null;
@@ -44,7 +39,5 @@ const genresSlice = createSlice({
     [getGenres.rejected]: setError,
   },
 });
-
-// const {  } = genresSlice.actions;
 
 export default genresSlice.reducer;

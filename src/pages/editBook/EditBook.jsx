@@ -3,30 +3,24 @@ import "antd/dist/antd.css";
 import { useParams, Link } from "react-router-dom";
 import style from "./editBook.module.css";
 import { Form, Input, Button, Select } from "antd";
-// import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { editBook } from "../../store/bookSlice";
 import {
-  // selectBook,
   selectGenres,
   selectCurrency,
+  reselectBookById,
 } from "../../store/selectors";
 
 const { Option } = Select;
 
 const EditBook = () => {
   const { id } = useParams();
-  const dispatch = useDispatch();
 
-  // const navigate = useNavigate();
-  // const goToBooks = () => navigate("/books");
+  const dispatch = useDispatch();
 
   const [form] = Form.useForm();
 
-  // нужен ли тут useEffect ?
-  const book = useSelector((state) =>
-    state.books.books.find(({ id: bookID }) => bookID === id)
-  );
+  const book = useSelector(reselectBookById(id));
 
   const genres = useSelector(selectGenres);
   const currency = useSelector(selectCurrency);

@@ -1,25 +1,41 @@
 import { createSelector } from "@reduxjs/toolkit";
 
-// export const selectBook = (state) => state.books.books.find(({ id: bookID }) => bookID === id);
-
 export const selectGenres = (state) => state.genres.genres;
 export const selectCurrency = (state) => state.currency.currency;
 
-export const selectBooks = (state) => state.books.books;
-export const selectIsLoading = (state) => state.books.books;
-export const selectError = (state) => state.books.books;
+const selectBooksSlice = (state) => state.books;
+const selectBooks = (state) => selectBooksSlice(state).books;
+const selectIsLoading = (state) => selectBooksSlice(state).isLoading;
+const selectError = (state) => selectBooksSlice(state).error;
 
-export const selectFromBookSlice = createSelector(
-  [selectIsLoading, selectError, selectBooks],
-  (isLoading, error, books) => {
-    if (isLoading === true) {
-      return isLoading;
-    }
+export const reselectBooks = createSelector([selectBooksSlice], (books) => {
+  if (books) return books;
+});
 
-    if (error) {
-      return error;
-    }
-
-    return books;
+export const reselectIsLoading = createSelector(
+  [selectIsLoading],
+  (isLoading) => {
+    if (isLoading === true) return isLoading;
   }
+);
+
+export const reselectError = createSelector([selectError], (error) => {
+  if (error) return error;
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ???
+export const reselectBookById = createSelector([selectBooks], (books, id) =>
+  books.find(({ id: bookID }) => bookID === id)
 );
